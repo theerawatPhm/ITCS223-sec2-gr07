@@ -2,21 +2,25 @@
 const API_NEW_ARRIVALS = 'API_URL_NEW_ARRIVALS';
 const API_HIGH_RATED = 'API_URL_HIGH_RATED';
 
-// 1. ฟังก์ชันโหลด Header
-async function loadHeader() {
+//Load Component (Header, Sidebar, Footer, Sort)
+async function loadComponent(url, containerId, callback = null) {
+    const container = document.getElementById(containerId);
+    if (!container) return; 
+    
     try {
-        const response = await fetch('header.html');
+        const response = await fetch(url);
         const html = await response.text();
-        document.getElementById('header-container').innerHTML = html;
+        container.innerHTML = html;
         
-        // เมื่อโหลดเสร็จแล้ว ให้เปิดใช้งานปุ่มต่างๆ ทันที
-        initializeHeaderComponents();
+        if (callback) callback();
     } catch (error) {
-        console.error('Error loading header:', error);
+        console.error(`Error loading ${url}:`, error);
     }
 }
 
-// 2. ฟังก์ชันควบคุม UI ใน Header (Login & Search)
+// 2. ฟังก์ชันตั้งค่า UI Components
+
+// ตั้งค่า Header (Login Modal & Search Modal)
 function initializeHeaderComponents() {
     const loginIcon = document.querySelector('.user-icon');
     const loginModal = document.getElementById('loginModal');
@@ -24,31 +28,29 @@ function initializeHeaderComponents() {
     const searchModal = document.getElementById('searchModal');
     const clearBtn = document.querySelector('.btn-clear');
 
-    // เปิด Login Modal
     if (loginIcon && loginModal) {
-        loginIcon.addEventListener('click', function (e) {
+        loginIcon.addEventListener('click', (e) => {
             e.preventDefault();
             loginModal.style.display = 'flex';
         });
     }
 
-    // เปิด Search Modal
     if (searchBox && searchModal) {
-        searchBox.addEventListener('click', function (e) {
+        searchBox.addEventListener('click', (e) => {
             e.preventDefault();
             searchModal.style.display = 'flex'; 
         });
     }
 
-    // คลิกพื้นที่ว่างเพื่อปิด Modal
-    window.addEventListener('click', function (e) {
+    //click area to close modal
+    window.addEventListener('click', (e) => {
         if (searchModal && e.target === searchModal) searchModal.style.display = 'none';
         if (loginModal && e.target === loginModal) loginModal.style.display = 'none';
     });
 
-    // ปุ่ม Clear ในหน้าค้นหา
+    //clear btn
     if (clearBtn && searchModal) {
-        clearBtn.addEventListener('click', function (e) {
+        clearBtn.addEventListener('click', (e) => {
             e.preventDefault();
             searchModal.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
             searchModal.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
@@ -56,93 +58,22 @@ function initializeHeaderComponents() {
         });
     }
 
-    // ระบบดาวในหน้าค้นหา
+    //star rating
     if (searchModal) {
         const stars = searchModal.querySelectorAll('.star');
         stars.forEach(star => {
             star.addEventListener('click', () => {
                 const value = star.getAttribute('data-value');
                 stars.forEach(s => {
-                    if (s.getAttribute('data-value') <= value) s.classList.add('selected');
-                    else s.classList.remove('selected');
+                    s.getAttribute('data-value') <= value ? s.classList.add('selected') : s.classList.remove('selected');
                 });
-            });
-            star.addEventListener('mouseover', () => {
-                const value = star.getAttribute('data-value');
-                stars.forEach(s => {
-                    if (s.getAttribute('data-value') <= value) s.classList.add('hovered');
-                    else s.classList.remove('hovered');
-                });
-            });
-            star.addEventListener('mouseout', () => {
-                stars.forEach(s => s.classList.remove('hovered'));
             });
         });
     }
 }
 
-// 3. ฟังก์ชันหน้า Index (สร้างดาวและดึงสินค้า)
-function generateStars(rating) {
-    let starsHTML = '';
-    const fullStars = Math.floor(rating);
-    const emptyStars = 5 - fullStars;
-
-    if (fullStars > 0) starsHTML += `<span class="stars-filled">${'&#9733;'.repeat(fullStars)}</span>`;
-    if (emptyStars > 0) starsHTML += `<span class="stars-empty">${'&#9733;'.repeat(emptyStars)}</span>`;
-    return starsHTML;
-}
-
-async function fetchAndRenderProducts(apiUrl, containerId) {
-    const container = document.getElementById(containerId);
-    try {
-        const products = [
-            { id: 1, brand: "BRAND API 1", name: "Product loaded from API 1", price: 1580.00, rating: 5.0, imageUrl: "https://via.placeholder.com/200x200?text=Product+1" },
-            { id: 2, brand: "BRAND API 2", name: "Product loaded from API 2", price: 199.00, rating: 4.0, imageUrl: "https://via.placeholder.com/200x200?text=Product+2" },
-            { id: 3, brand: "BRAND API 3", name: "Product loaded from API 3", price: 59.00, rating: 4.5, imageUrl: "https://via.placeholder.com/200x200?text=Product+3" }
-        ];
-
-        container.innerHTML = '';
-        products.forEach(product => {
-            const productCard = `
-                <div class="product-card">
-                    <div class="product-image"><img src="${product.imageUrl}" alt="${product.name}"></div>
-                    <div class="product-info">
-                        <div class="product-brand">${product.brand}</div>
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">฿ ${product.price.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</div>
-                    </div>
-                    <div class="product-footer">
-                        <div class="product-rating">
-                            ${generateStars(product.rating)}
-                            <span class="rating-score">${product.rating.toFixed(1)}</span>
-                        </div>
-                        <button class="btn-cart">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>`;
-            container.innerHTML += productCard;
-        });
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        container.innerHTML = '<p style="color: red; font-size: 18px;">ไม่สามารถดึงข้อมูลสินค้าได้</p>';
-    }
-}
-
-// 4. จุดเริ่มต้นการทำงาน
-document.addEventListener('DOMContentLoaded', () => {
-    // โหลด Header เสมอ ไม่ว่าจะอยู่หน้าไหน
-    loadHeader();
-
-    // ถ้าอยู่หน้า index.html (มีกล่องรับสินค้า) ให้โหลดสินค้า
-    if (document.getElementById('new-arrivals-container')) {
-        fetchAndRenderProducts(API_NEW_ARRIVALS, 'new-arrivals-container');
-        fetchAndRenderProducts(API_HIGH_RATED, 'high-rated-container');
-    }
-
-    // ถ้าอยู่หน้า search.html (มีกล่อง Dropdown) ให้ทำงานส่วน Dropdown
+//Sort Dropdown
+function initializeSortDropdown() {
     const dropdownTrigger = document.querySelector('.dropdown-trigger');
     const dropdownOptions = document.querySelector('.dropdown-options');
     const selectedText = document.querySelector('.selected-text');
@@ -156,52 +87,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
         optionItems.forEach(item => {
             item.addEventListener('click', function () {
+                const sortBy = this.getAttribute('data-value');
+
                 selectedText.textContent = this.textContent;
+
                 optionItems.forEach(opt => opt.classList.remove('active'));
                 this.classList.add('active');
+
                 dropdownOptions.classList.remove('open');
+
+                const containerId = document.querySelector('.product-grid').id || 'search-result-container';
+                fetchAndRenderProducts('API_URL', containerId, sortBy);
             });
         });
 
-        window.addEventListener('click', function () {
-            dropdownOptions.classList.remove('open');
+        window.addEventListener('click', () => dropdownOptions.classList.remove('open'));
+    }
+}
+
+// 3.index page to load data
+function generateStars(rating) {
+    let starsHTML = '';
+    const fullStars = Math.floor(rating);
+    const emptyStars = 5 - fullStars;
+    if (fullStars > 0) starsHTML += `<span class="stars-filled">${'★'.repeat(fullStars)}</span>`;
+    if (emptyStars > 0) starsHTML += `<span class="stars-empty">${'★'.repeat(emptyStars)}</span>`;
+    return starsHTML;
+}
+
+async function fetchAndRenderProducts(apiUrl, containerId, sortBy = 'new-arrivals') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    try {
+        //Mock Data (wait for backend)
+        let products = [
+            { id: 1, brand: "CALVIN KLEIN", name: "Silky Coconut Perfume Mist", price: 1580.00, rating: 5.0, date: "2024-04-10", imageUrl: "assets/img/image 3.png" },
+            { id: 2, brand: "RINN", name: "Soft Blink Lashes", price: 190.00, rating: 4.5, date: "2024-04-05", imageUrl: "assets/img/image 3.png" },
+            { id: 3, brand: "DCASH", name: "Max Speed Floral Colors", price: 59.00, rating: 4.0, date: "2024-03-20", imageUrl: "assets/img/image 3.png" },
+            { id: 4, brand: "MAYBELLINE", name: "Volume Express Hyper Curl", price: 179.00, rating: 4.8, date: "2024-04-12", imageUrl: "assets/img/image 3.png" },
+            { id: 5, brand: "3CE", name: "Velvet Lip Tint", price: 690.00, rating: 4.9, date: "2024-04-01", imageUrl: "assets/img/image 3.png" }
+        ];
+
+        //sort data function is HERE
+        if (sortBy === 'price-low-high') {
+            products.sort((a, b) => a.price - b.price);
+        } else if (sortBy === 'price-high-low') {
+            products.sort((a, b) => b.price - a.price);
+        } else if (sortBy === 'high-rated') {
+            products.sort((a, b) => b.rating - a.rating);
+        } else if (sortBy === 'brand-a-z') {
+            products.sort((a, b) => a.brand.localeCompare(b.brand));
+        } else if (sortBy === 'brand-z-a') {
+            products.sort((a, b) => b.brand.localeCompare(a.brand));
+        } else {
+
+            products.sort((a, b) => new Date(b.date) - new Date(a.date)); 
+        }
+
+        container.innerHTML = '';
+        products.forEach(product => {
+            container.innerHTML += `
+                <div class="product-card">
+                    <div class="product-image"><img src="${product.imageUrl}" alt="${product.name}"></div>
+                    <div class="product-info">
+                        <div class="product-brand">${product.brand}</div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">฿ ${product.price.toLocaleString('th-TH', { minimumFractionDigits: 2 })}</div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-rating">
+                            ${generateStars(product.rating)} <span class="rating-score">${product.rating.toFixed(1)}</span>
+                        </div>
+                        <button class="btn-cart">🛒</button>
+                    </div>
+                </div>`;
         });
-    }
-});
-
-async function loadSidebar() {
-    const sidebarContainer = document.getElementById('sidebar-container');
-    if (!sidebarContainer) return; // ถ้าหน้านั้นไม่มีที่ใส่ Sidebar ก็ไม่ต้องโหลด
-
-    try {
-        const response = await fetch('sidebar.html');
-        const html = await response.text();
-        sidebarContainer.innerHTML = html;
     } catch (error) {
-        console.error('Error loading sidebar:', error);
+        console.error('Error:', error);
     }
 }
 
-//call loadSidebar
-async function loadHeader() {
-    try {
-        const response = await fetch('header.html');
-        const html = await response.text();
-        document.getElementById('header-container').innerHTML = html;
-        initializeHeaderComponents();
-    } catch (error) {
-        console.error('Error loading header:', error);
-    }
-}
-
+//Call function
 document.addEventListener('DOMContentLoaded', () => {
-    loadHeader();
-    loadSidebar(); // เพิ่มบรรทัดนี้เพื่อโหลด Sidebar ทุกหน้า
 
-    if (document.getElementById('new-arrivals-container')) {
-        fetchAndRenderProducts(API_NEW_ARRIVALS, 'new-arrivals-container');
-        fetchAndRenderProducts(API_HIGH_RATED, 'high-rated-container');
-    }
-    
-    // ... (ส่วนควบคุม Dropdown ในหน้า Search คงเดิม) ...
+    loadComponent('header.html', 'header-container', initializeHeaderComponents);
+    loadComponent('sidebar.html', 'sidebar-container');
+    loadComponent('footer.html', 'footer-container');
+    loadComponent('sort.html', 'sort-container', initializeSortDropdown);
+
+    fetchAndRenderProducts(API_NEW_ARRIVALS, 'new-arrivals-container');
+    fetchAndRenderProducts(API_HIGH_RATED, 'high-rated-container');
+
+    fetchAndRenderProducts('API_URL', 'search-result-container', 'new-arrivals');
 });
