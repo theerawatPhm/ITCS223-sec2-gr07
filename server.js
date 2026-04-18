@@ -93,11 +93,11 @@ router.post('/api/auth/login', (req, res) => {
         if (error) throw error;
 
         if (results.length === 0 || results[0].login_password !== password) {
-            // Log failed attempt
-            let logSql = `INSERT INTO Login_log (log_id, login_time, logout_time, login_status)
-                          SELECT log_id, NOW(), NOW(), 'failed'
-                          FROM Admin_Login WHERE username = ?`;
-            connection.query(logSql, [username], function(err) {});
+        /* Log failed attempt */
+        let logSql = `INSERT INTO Login_log (log_id, login_time, logout_time, login_status)
+                      SELECT log_id, NOW(), NOW(), 'failed'
+                      FROM Admin_Login WHERE username = ?`;
+        connection.query(logSql, [username], function(err) {});
 
             console.log('Login failed: invalid credentials');
             return res.status(401).json({ message: 'Invalid credentials.' });

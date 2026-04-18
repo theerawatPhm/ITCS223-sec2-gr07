@@ -29,11 +29,12 @@ CREATE TABLE Admin_Login (
 
 -- Table: Login_log
 CREATE TABLE Login_log (
+    log_entry_id INT          NOT NULL AUTO_INCREMENT,
     log_id       VARCHAR(20) NOT NULL,
     login_time   DATETIME    NOT NULL,
     logout_time  DATETIME    NOT NULL,
     login_status VARCHAR(20) NOT NULL,
-    CONSTRAINT PK_log  PRIMARY KEY (log_id),
+    CONSTRAINT PK_log  PRIMARY KEY (log_entry_id),
     CONSTRAINT FK_log  FOREIGN KEY (log_id) REFERENCES Admin_Info (emp_id),
     CONSTRAINT CHK_stt CHECK (login_status IN ('succeed', 'failed', 'terminated'))
 );
@@ -49,7 +50,7 @@ CREATE TABLE Product (
     how_to      VARCHAR(500)   NOT NULL,
     ingredients VARCHAR(500)   NOT NULL,
     rating      INT,
-    spe_flag    VARCHAR(20),
+    spe_flag    VARCHAR(50),
     CONSTRAINT PK_prod    PRIMARY KEY (prod_id),
     CONSTRAINT CHK_price  CHECK (price > 0.00),
     CONSTRAINT CHK_rating CHECK (rating BETWEEN 0 AND 5),
@@ -99,16 +100,16 @@ INSERT INTO Admin_Info (emp_id, fname, lname, address, birthdate, email, phone) 
 -- Admin_Login (10 rows)
 -- ============================================================
 INSERT INTO Admin_Login (log_id, username, login_password) VALUES
-('E001', 'admin01', 'Pass1234'),
-('E002', 'admin02', 'Pass1234'),
-('E003', 'admin03', 'Pass1234'),
-('E004', 'admin04', 'Pass1234'),
-('E005', 'admin05', 'Pass1234'),
-('E006', 'admin06', 'Pass1234'),
-('E007', 'admin07', 'Pass1234'),
-('E008', 'admin08', 'Pass1234'),
-('E009', 'admin09', 'Pass1234'),
-('E010', 'admin10', 'Pass1234');
+('E001', 'somchai@glow.co.th', 'Pass1234'),
+('E002', 'siriporn@glow.co.th', 'Pass1234'),
+('E003', 'natthapol@glow.co.th', 'Pass1234'),
+('E004', 'warunee@glow.co.th', 'Pass1234'),
+('E005', 'pichaya@glow.co.th', 'Pass1234'),
+('E006', 'kittipong@glow.co.th', 'Pass1234'),
+('E007', 'napatsorn@glow.co.th', 'Pass1234'),
+('E008', 'thanakorn@glow.co.th', 'Pass1234'),
+('E009', 'ratana@glow.co.th', 'Pass1234'),
+('E010', 'jirawat@glow.co.th', 'Pass1234');
 
 -- ============================================================
 -- Login_log (10 rows)

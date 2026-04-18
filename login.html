@@ -134,11 +134,11 @@
     <div class="login-card fade-up">
       <h2>Login</h2>
 
-      <div class="login-error" id="loginError">Invalid email or password.</div>
+      <div class="login-error" id="loginError"></div>
 
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="" autocomplete="email" />
+        <label for="username">Email</label>
+        <input type="email" id="username" placeholder="" autocomplete="email" />
       </div>
 
       <div class="form-group">
@@ -174,15 +174,30 @@
   </footer>
 
   <script>
+    /* --- Demo credentials (fallback when server not running) --- */
+    const DEMO_ADMINS = [
+      { username: 'somchai@glow.co.th',   password: 'Pass1234' },
+      { username: 'siriporn@glow.co.th',  password: 'Pass1234' },
+      { username: 'natthapol@glow.co.th', password: 'Pass1234' },
+      { username: 'warunee@glow.co.th',   password: 'Pass1234' },
+      { username: 'pichaya@glow.co.th',   password: 'Pass1234' },
+      { username: 'kittipong@glow.co.th', password: 'Pass1234' },
+      { username: 'napatsorn@glow.co.th', password: 'Pass1234' },
+      { username: 'thanakorn@glow.co.th', password: 'Pass1234' },
+      { username: 'ratana@glow.co.th',    password: 'Pass1234' },
+      { username: 'jirawat@glow.co.th',   password: 'Pass1234' },
+    ];
+
     /* --- Login handler --- */
     document.getElementById('loginBtn').addEventListener('click', async () => {
-      const email    = document.getElementById('email').value.trim();
+      const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
       const errDiv   = document.getElementById('loginError');
       const btn      = document.getElementById('loginBtn');
 
-      if (!email || !password) {
-        errDiv.textContent = 'Please enter email and password.';
+      /* Validate input */
+      if (!username || !password) {
+        errDiv.textContent = 'Please enter username and password.';
         errDiv.classList.add('show');
         return;
       }
@@ -196,21 +211,31 @@
         const res  = await fetch('http://localhost:3000/api/auth/login', {
           method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ email, password }),
+          body:    JSON.stringify({ username, password }),
         });
         const data = await res.json();
 
         if (res.ok && data.token) {
+          /* Save token and redirect to manage page */
           sessionStorage.setItem('adminToken', data.token);
-          sessionStorage.setItem('adminUser',  email);
+          sessionStorage.setItem('adminUser',  username);
           window.location.href = 'manage.html';
         } else {
-          errDiv.textContent = data.message || 'Invalid email or password.';
+          errDiv.textContent = data.message || 'Invalid username or password.';
           errDiv.classList.add('show');
         }
+
       } catch {
-        errDiv.textContent = 'Cannot connect to server. (Start web service on port 3000)';
-        errDiv.classList.add('show');
+        /* Server not running — use demo fallback */
+        const match = DEMO_ADMINS.find(a => a.username === username && a.password === password);
+        if (match) {
+          sessionStorage.setItem('adminToken', 'demo-token');
+          sessionStorage.setItem('adminUser',  username);
+          window.location.href = 'manage.html';
+        } else {
+          errDiv.textContent = 'Invalid email or password. (Demo: somchai@glow.co.th / Pass1234)';
+          errDiv.classList.add('show');
+        }
       } finally {
         btn.disabled = false;
         btn.textContent = 'Login';
@@ -221,6 +246,11 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Enter') document.getElementById('loginBtn').click();
     });
+
+    /* If already logged in, redirect straight to manage */
+    if (sessionStorage.getItem('adminToken')) {
+      window.location.href = 'manage.html';
+    }
   </script>
 
 </body>

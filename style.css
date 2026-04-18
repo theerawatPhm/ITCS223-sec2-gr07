@@ -6,15 +6,16 @@
 /* --- Google Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
+/* --- CSS Variables — colours from Figma colour palette --- */
 :root {
-  --pink:        #F28695;
-  --pink-light:  #F2BFB4;
-  --peach:       #F1CCA6;
-  --cream:       #F2E6B8;
-  --warm-white:  #FFFEF9;
-  --charcoal:    #2B2B2B;
-  --muted:       #888888;
-  --border:      #E8D8D0;
+  --pink:        #F28695;   /* primary pink — header, buttons */
+  --pink-light:  #F2BFB4;   /* light pink */
+  --peach:       #F1CCA6;   /* peach */
+  --cream:       #F2E6B8;   /* cream / yellow */
+  --warm-white:  #FFFEF9;   /* page background */
+  --charcoal:    #2B2B2B;   /* text colour */
+  --muted:       #888888;   /* secondary text */
+  --border:      #E8D8D0;   /* borders */
   --grad-hero: linear-gradient(160deg, #F2BFB4 0%, #F1CCA6 50%, #F2E6B8 100%);
   --font-display: 'Afacad', sans-serif;
   --font-body:    'Afacad', sans-serif;
@@ -22,6 +23,7 @@
   --shadow:       0 2px 16px rgba(180,120,110,0.10);
 }
 
+/* --- Reset --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
@@ -37,8 +39,9 @@ img { max-width: 100%; display: block; }
 a  { color: inherit; text-decoration: none; }
 ul { list-style: none; }
 
-
-/* HEADER / NAV */
+/* ========================================
+   HEADER / NAV
+   ======================================== */
 header {
   background: var(--pink);
   padding: 0 2.5rem;
@@ -120,7 +123,9 @@ nav a.active { font-weight: 500; }
   opacity: 0.9;
 }
 
-   /* FOOTER */
+/* ========================================
+   FOOTER
+   ======================================== */
 footer {
   background: var(--pink);
   padding: 3rem 3rem 2rem;
@@ -157,7 +162,9 @@ footer {
   text-align: right;
 }
 
-/* BUTTONS */
+/* ========================================
+   BUTTONS
+   ======================================== */
 .btn {
   display: inline-block;
   padding: 0.6rem 1.6rem;
@@ -182,7 +189,9 @@ footer {
 .btn-danger { border-color: #c0392b; color: #c0392b; }
 .btn-danger:hover { background: #c0392b; color: #fff; }
 
-   /* FORMS */
+/* ========================================
+   FORMS
+   ======================================== */
 .form-group { margin-bottom: 1.2rem; }
 .form-group label {
   display: block;
@@ -211,7 +220,9 @@ footer {
 .form-group textarea:focus { border-color: var(--pink); }
 .form-group textarea { resize: vertical; min-height: 100px; }
 
-   /* CARDS */
+/* ========================================
+   CARDS
+   ======================================== */
 .card {
   background: #fff;
   border-radius: var(--radius);
@@ -227,18 +238,21 @@ footer {
 }
 .card-price { font-size: 0.9rem; color: var(--muted); }
 
-
-   /* STARS */
+/* ========================================
+   STARS
+   ======================================== */
 .stars { color: var(--pink); font-size: 0.9rem; letter-spacing: 2px; }
 
-
-   /* PAGE WRAPPER */
+/* ========================================
+   PAGE WRAPPER
+   ======================================== */
 main { flex: 1; }
 .page-section { padding: 3rem 3rem; }
 .container { max-width: 1100px; margin: 0 auto; }
 
-
-   /* ANIMATIONS */
+/* ========================================
+   ANIMATIONS
+   ======================================== */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }

@@ -6,34 +6,23 @@
   <title>Glow Society — Shop</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* ---- Top search bar row ---- */
     .search-bar-row {
       background: #fff;
-      padding: 1rem 2rem;
+      padding: 0.75rem 2rem;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-    /* breadcrumb style */
-    .breadcrumb-nav {
       font-size: 0.8rem;
       color: var(--muted);
-      margin-right: auto;
     }
-    .breadcrumb-nav a { color: var(--muted); }
-    .breadcrumb-nav a:hover { color: var(--pink); }
-    .breadcrumb-nav span { margin: 0 0.3rem; }
+    .search-bar-row a { color: var(--muted); }
+    .search-bar-row a:hover { color: var(--pink); }
 
-    /* ---- Main layout: sidebar + content ---- */
     .shop-wrap {
       display: grid;
       grid-template-columns: 200px 1fr;
-      min-height: calc(100vh - 90px - 180px - 56px);
+      min-height: calc(100vh - 90px - 200px - 44px);
     }
 
-    /* ---- Sidebar ---- */
+    /* Sidebar */
     .shop-sidebar {
       background: #fff;
       border-right: 1px solid var(--border);
@@ -51,18 +40,17 @@
     .category-list li {
       font-size: 0.85rem;
       color: var(--charcoal);
-      padding: 0.3rem 0;
+      padding: 0.3rem 0.4rem;
       cursor: pointer;
-      transition: color 0.15s;
       border-radius: 3px;
+      transition: color 0.15s;
     }
-    .category-list li:hover   { color: var(--pink); }
-    .category-list li.active  { color: var(--pink); font-weight: 500; }
+    .category-list li:hover  { color: var(--pink); }
+    .category-list li.active { color: var(--pink); font-weight: 500; }
 
-    /* ---- Content area ---- */
+    /* Content */
     .shop-content { padding: 1.5rem 2rem; background: #fafafa; }
 
-    /* Sort + action row */
     .sort-row {
       display: flex;
       align-items: center;
@@ -80,18 +68,17 @@
       background: #fff;
       cursor: pointer;
     }
-    /* Admin buttons — only visible when logged in */
     .admin-actions { margin-left: auto; display: flex; gap: 0.5rem; }
     .admin-actions .btn { font-size: 0.8rem; padding: 0.35rem 1rem; }
 
-    /* ---- Product grid ---- */
+    /* Product grid — 3 columns */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
     }
 
-    /* Product card */
+    /* Product card — clean, no badges */
     .product-card {
       background: #fff;
       border: 1px solid var(--border);
@@ -105,6 +92,7 @@
       transform: translateY(-2px);
     }
 
+    /* Image area — shows real img if available, else emoji fallback */
     .product-img {
       width: 100%;
       aspect-ratio: 1;
@@ -114,45 +102,29 @@
       justify-content: center;
       font-size: 3rem;
       overflow: hidden;
-      position: relative;
     }
-    .product-img img { width:100%; height:100%; object-fit:cover; }
-
-    /* Wishlist + K badge */
-    .product-badges {
-      position: absolute;
-      bottom: 6px; right: 6px;
-      display: flex;
-      gap: 4px;
-    }
-    .badge-icon {
-      width: 24px; height: 24px;
-      background: rgba(0,0,0,0.3);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.65rem;
-      color: #fff;
-      cursor: pointer;
-      border: none;
-      transition: background 0.2s;
-    }
-    .badge-icon:hover { background: var(--pink); }
-    .badge-k {
-      background: #222;
-      font-size: 0.6rem;
-      font-weight: 600;
-      border-radius: 3px;
-      width: auto;
-      padding: 0 5px;
+    .product-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .product-body { padding: 0.65rem 0.75rem 0.75rem; }
     .product-brand { font-size: 0.72rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.1rem; }
     .product-name  { font-size: 0.75rem; color: var(--muted); line-height: 1.3; margin-bottom: 0.4rem; }
     .product-price { font-size: 0.82rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.25rem; }
-    .product-stars { font-size: 0.68rem; color: var(--pink); letter-spacing: 1px; }
+    .product-stars { font-size: 0.68rem; color: var(--pink); }
 
-    /* View more row */
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+    /* View more */
     .view-more-row {
       text-align: center;
       padding: 1.5rem 0 0.5rem;
@@ -171,29 +143,25 @@
     }
     .view-more-row a:hover { background: var(--cream); }
 
-    /* Loading */
     .spinner { text-align:center; padding:3rem; color:var(--muted); font-size:0.88rem; display:none; }
     .spinner.show { display:block; }
   </style>
 </head>
 <body>
 
-  <!-- ===================== HEADER ===================== -->
+  <!-- HEADER -->
   <header>
-    <a href="index.html" class="logo">
-      <span>GLOW ✳</span>
-      <span>SOCIETY</span>
-    </a>
+    <a href="index.html" class="logo"><span>GLOW ✳</span><span>SOCIETY</span></a>
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="search.html" class="active">Shop</a></li>
         <li><a href="team.html">Our Team</a></li>
-        <li><a href="login.html">Admin</a></li>
+        <!-- Show Admin link or Logout depending on login state -->
+        <li id="navAuthLink"><a href="login.html">Admin</a></li>
       </ul>
     </nav>
     <div class="header-right">
-      <span class="icon-user">&#9752;</span>
       <div class="header-search">
         <input type="text" placeholder="Search..." id="headerSearch" />
         <button onclick="doSearch()">&#128269;</button>
@@ -203,76 +171,61 @@
 
   <!-- Breadcrumb -->
   <div class="search-bar-row">
-    <nav class="breadcrumb-nav">
-      <a href="index.html">breadcrumbs</a>
-      <span>›</span>
-      <a href="search.html">breadcrumbs</a>
-      <span>›</span>
-      <span id="bcCategory">All</span>
-    </nav>
+    <a href="index.html">Home</a> ›
+    <a href="search.html">Shop</a> ›
+    <span id="bcCategory">All</span>
   </div>
 
-  <!-- ===================== MAIN ===================== -->
   <main>
     <div class="shop-wrap">
 
-      <!-- ---- Sidebar ---- -->
+      <!-- Sidebar categories — data-cat must match DB category values exactly -->
       <aside class="shop-sidebar">
         <div class="sidebar-title">Category</div>
         <ul class="category-list" id="categoryList">
-          <li class="active" data-cat="">Makeup</li>
-          <li data-cat="skincare">Skincare</li>
-          <li data-cat="haircare">Hair care</li>
-          <li data-cat="bath">Bath &amp; Body</li>
-          <li data-cat="personal">Personal care</li>
-          <li data-cat="diet">Diet</li>
-          <li data-cat="health">Health &amp; Vitamin supplement</li>
-          <li data-cat="dermo">Dermo</li>
-          <li data-cat="beauty">Beauty tools &amp; Accessories</li>
-          <li data-cat="perfume">Perfume &amp; Fragrance</li>
-          <li data-cat="nail">Nail care</li>
-          <li data-cat="accessories">Beauty tools &amp; Accessories</li>
+          <li class="active" data-cat="">All</li>
+          <li data-cat="Makeup">Makeup</li>
+          <li data-cat="Skincare">Skincare</li>
+          <li data-cat="Hair care">Hair care</li>
+          <li data-cat="Bath & Body">Bath &amp; Body</li>
+          <li data-cat="Personal care">Personal care</li>
+          <li data-cat="Diet">Diet</li>
+          <li data-cat="Health & Vitamin supplement">Health &amp; Vitamin supplement</li>
+          <li data-cat="Dermo">Dermo</li>
+          <li data-cat="Perfume & Fragrance">Perfume &amp; Fragrance</li>
+          <li data-cat="Nail care">Nail care</li>
+          <li data-cat="Beauty tools & Accessories">Beauty tools &amp; Accessories</li>
         </ul>
       </aside>
 
-      <!-- ---- Content ---- -->
+      <!-- Content -->
       <article class="shop-content">
-
-        <!-- Sort + Admin buttons -->
         <div class="sort-row">
           <span class="sort-label">Sort:</span>
           <select class="sort-select" id="sortSelect" onchange="renderProducts()">
-            <option value="bestseller">Best seller</option>
+            <option value="default">Best seller</option>
             <option value="new">New arrivals</option>
             <option value="price-asc">Price ↑</option>
             <option value="price-desc">Price ↓</option>
             <option value="rating">High rated</option>
           </select>
-
-          <!-- Admin buttons (shown when logged in) -->
+          <!-- Admin buttons — only when logged in -->
           <div class="admin-actions" id="adminActions" style="display:none">
-            <a href="manage.html" class="btn btn-sm">Edit Item</a>
-            <a href="manage.html" class="btn btn-sm btn-danger">Delete Item</a>
+            <a href="manage.html" class="btn btn-sm">Manage Products</a>
           </div>
         </div>
 
-        <!-- Spinner -->
         <div class="spinner" id="spinner">Loading…</div>
-
-        <!-- Product grid -->
         <div class="product-grid" id="productGrid"></div>
-
-        <!-- View more -->
-        <div class="view-more-row" id="viewMoreRow">
+        <div class="view-more-row">
           <span id="countLabel"></span><br/>
-          <a href="#" id="viewMoreBtn" onclick="loadMore(); return false;">View more</a>
+          <a href="#" id="viewMoreBtn" style="display:none" onclick="loadMore();return false;">View more</a>
         </div>
-
       </article>
     </div>
   </main>
 
-  <!-- ===================== FOOTER ===================== -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-col">
       <h4>About us</h4>
@@ -293,60 +246,60 @@
 
   <script>
     /* ============================================================
-       SAMPLE PRODUCTS — from Figma (Maybelline New York, Kiss Me, etc.)
-       In Task 4 these will be fetched from web service
+       FALLBACK DATA — used when web service not running
+       category values match DB exactly (case-sensitive)
        ============================================================ */
-    const ALL_PRODUCTS = [
-      { id:1,  brand:'MAYBELLINE NEW YORK', name:'Hyper Curl Waterproof Mascara',   price:179,  rating:4, category:'makeup',   emoji:'🖤', bg:'#f0ece8' },
-      { id:2,  brand:'MAYBELLINE NEW YORK', name:'Fit Me Matte + Poreless Foundation',price:249, rating:4, category:'makeup',  emoji:'💄', bg:'#f4e8e0' },
-      { id:3,  brand:'MAYBELLINE NEW YORK', name:'SuperStay Matte Ink Liquid Lipstick',price:249,rating:4, category:'makeup', emoji:'💋', bg:'#f4dcd8' },
-      { id:4,  brand:'MAYBELLINE NEW YORK', name:'Sky High Mascara',                price:169,  rating:4, category:'makeup',   emoji:'✨', bg:'#e8e4f0' },
-      { id:5,  brand:'KISS ME',             name:'Heroine Make Volume &amp; Curl Waterproof',price:435, rating:4, category:'makeup', emoji:'👁', bg:'#f0e8ec' },
-      { id:6,  brand:'NARIO LLARIAS',       name:'Super Matte Powder',              price:105,  rating:4, category:'makeup',   emoji:'🌸', bg:'#f4e4e8' },
-      { id:7,  brand:'BROWIT',              name:'Tip Brow Pencil',                 price:118,  rating:4, category:'makeup',   emoji:'✏️', bg:'#ece8e0' },
-      { id:8,  brand:'HERREEZA',            name:'Contour Blush Palette',           price:299,  rating:4, category:'makeup',   emoji:'🎨', bg:'#f4e0e4' },
-      { id:9,  brand:'ROMAND',              name:'Han All Shadow',                  price:349,  rating:4, category:'makeup',   emoji:'💜', bg:'#e8e0f0' },
+    const FALLBACK_PRODUCTS = [
+      { id:'P001', brand:'MAYBELLINE NEW YORK', name:'Volume Express Hyper Curl Waterproof Mascara', price:179, rating:4, category:'Makeup',   img:null, emoji:'🖤', bg:'#f0ece8' },
+      { id:'P002', brand:'MAYBELLINE NEW YORK', name:'Fit Me Matte + Poreless Foundation',           price:249, rating:4, category:'Makeup',   img:null, emoji:'💄', bg:'#f4e8e0' },
+      { id:'P003', brand:'MAYBELLINE NEW YORK', name:'SuperStay Matte Ink Liquid Lipstick',          price:249, rating:4, category:'Makeup',   img:null, emoji:'💋', bg:'#f4dcd8' },
+      { id:'P004', brand:'MAYBELLINE NEW YORK', name:'Sky High Mascara',                             price:169, rating:4, category:'Makeup',   img:null, emoji:'✨', bg:'#e8e4f0' },
+      { id:'P005', brand:'KISS ME',             name:'Heroine Make Volume & Curl Waterproof',        price:435, rating:4, category:'Makeup',   img:null, emoji:'👁', bg:'#f0e8ec' },
+      { id:'P006', brand:'NARIO LLARIAS',        name:'Super Matte Pressed Powder',                  price:105, rating:4, category:'Makeup',   img:null, emoji:'🌸', bg:'#f4e4e8' },
+      { id:'P007', brand:'BROWIT',              name:'Tip Brow Pencil',                              price:118, rating:4, category:'Makeup',   img:null, emoji:'✏️',bg:'#ece8e0' },
+      { id:'P008', brand:'HERREEZA',            name:'Contour Blush Palette',                        price:299, rating:4, category:'Makeup',   img:null, emoji:'🎨', bg:'#f4e0e4' },
+      { id:'P009', brand:'ROMAND',              name:'Han All Shadow Palette',                       price:349, rating:4, category:'Makeup',   img:null, emoji:'💜', bg:'#e8e0f0' },
+      { id:'P010', brand:'COSRX',               name:'Advanced Snail 96 Mucin Power Essence',       price:750, rating:5, category:'Skincare', img:null, emoji:'🌿', bg:'#d4edd4' },
     ];
 
-    let currentProducts = [...ALL_PRODUCTS];
+    let currentProducts = [];
     let visibleCount    = 9;
     let activeCategory  = '';
 
-    /* ---- Category filter ---- */
+    /* ---- Category click ---- */
     document.getElementById('categoryList').addEventListener('click', e => {
       const li = e.target.closest('li');
       if (!li) return;
       document.querySelectorAll('.category-list li').forEach(x => x.classList.remove('active'));
       li.classList.add('active');
-      activeCategory = li.dataset.cat;
+      activeCategory = li.dataset.cat;  // empty string = All
       document.getElementById('bcCategory').textContent = li.textContent;
       visibleCount = 9;
       fetchProducts();
     });
 
-    /* ---- Sort change ---- */
     document.getElementById('sortSelect').addEventListener('change', renderProducts);
 
-    /* ---- Fetch from web service, fallback to sample ---- */
+    /* ---- Fetch products ---- */
     async function fetchProducts() {
       document.getElementById('spinner').classList.add('show');
       document.getElementById('productGrid').innerHTML = '';
 
       try {
-        /* Task 4: search web service */
         const params = new URLSearchParams();
         if (activeCategory) params.append('category', activeCategory);
         const q = new URLSearchParams(window.location.search).get('q');
         if (q) params.append('name', q);
 
-        const res  = await fetch(`http://localhost:3000/api/products/search?${params}`);
-        if (!res.ok) throw new Error();
+        const res = await fetch(`http://localhost:3000/api/products/search?${params}`);
+        if (!res.ok) throw new Error('Server error');
         const data = await res.json();
         currentProducts = data.products;
+
       } catch {
-        /* filter sample data locally */
-        currentProducts = ALL_PRODUCTS.filter(p =>
-          !activeCategory || p.category === activeCategory
+        /* Fallback — filter locally, category must match exactly */
+        currentProducts = FALLBACK_PRODUCTS.filter(p =>
+          activeCategory === '' || p.category === activeCategory
         );
       }
 
@@ -354,73 +307,78 @@
       renderProducts();
     }
 
-    /* ---- Render visible products ---- */
+    /* ---- Render cards ---- */
     function renderProducts() {
-      const sort = document.getElementById('sortSelect').value;
-      let sorted = [...currentProducts];
+      const sort   = document.getElementById('sortSelect').value;
+      let sorted   = [...currentProducts];
       if (sort === 'price-asc')  sorted.sort((a,b) => a.price - b.price);
       if (sort === 'price-desc') sorted.sort((a,b) => b.price - a.price);
       if (sort === 'rating')     sorted.sort((a,b) => b.rating - a.rating);
 
+      const total   = sorted.length;
       const visible = sorted.slice(0, visibleCount);
       const grid    = document.getElementById('productGrid');
-      const total   = sorted.length;
+
+      if (total === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+          <div class="icon">🔍</div>No products found in this category.</div>`;
+        document.getElementById('countLabel').textContent = '';
+        document.getElementById('viewMoreBtn').style.display = 'none';
+        return;
+      }
 
       grid.innerHTML = visible.map(p => {
-        const stars = '★'.repeat(p.rating) + '☆'.repeat(5 - p.rating);
+        const stars = '★'.repeat(Math.round(p.rating || 0)) + '☆'.repeat(5 - Math.round(p.rating || 0));
+        // Show real image if available, otherwise show emoji
+        const imgContent = p.img
+          ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><span style="display:none">${p.emoji || '🛍'}</span>`
+          : `<span>${p.emoji || '🛍'}</span>`;
+
         return `
           <div class="product-card" onclick="window.location.href='detail.html?id=${p.id}'">
-            <div class="product-img" style="background:${p.bg}">
-              <span>${p.emoji}</span>
-              <div class="product-badges">
-                <button class="badge-icon" onclick="event.stopPropagation()" title="Wishlist">♡</button>
-                <button class="badge-icon badge-k" onclick="event.stopPropagation()">K</button>
-              </div>
+            <div class="product-img" style="background:${p.bg || 'var(--cream)'}">
+              ${imgContent}
             </div>
             <div class="product-body">
-              <div class="product-brand">${p.brand}</div>
+              <div class="product-brand">${p.brand || ''}</div>
               <div class="product-name">${p.name}</div>
-              <div class="product-price">$ ${p.price.toFixed(2)}</div>
+              <div class="product-price">฿ ${Number(p.price).toFixed(2)}</div>
               <div class="product-stars">${stars}</div>
             </div>
           </div>`;
       }).join('');
 
-      /* View more count */
       document.getElementById('countLabel').textContent =
         `You have seen ${Math.min(visibleCount, total)} products out of ${total}`;
       document.getElementById('viewMoreBtn').style.display =
         visibleCount >= total ? 'none' : 'inline-block';
     }
 
-    function loadMore() {
-      visibleCount += 9;
-      renderProducts();
-    }
+    function loadMore() { visibleCount += 9; renderProducts(); }
 
     /* ---- Header search ---- */
     function doSearch() {
       const q = document.getElementById('headerSearch').value.trim();
-      if (q) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('q', q);
-        window.location.href = url.toString();
-      }
+      if (q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
     }
     document.getElementById('headerSearch').addEventListener('keydown', e => {
       if (e.key === 'Enter') doSearch();
     });
 
-    /* ---- Pre-fill search from URL ---- */
+    /* ---- Pre-fill from URL ---- */
     const urlQ = new URLSearchParams(window.location.search).get('q');
     if (urlQ) document.getElementById('headerSearch').value = urlQ;
 
-    const urlSort = new URLSearchParams(window.location.search).get('sort');
-    if (urlSort) document.getElementById('sortSelect').value = urlSort;
-
-    /* ---- Show admin buttons if logged in ---- */
+    /* ---- Auth UI ---- */
     if (sessionStorage.getItem('adminToken')) {
       document.getElementById('adminActions').style.display = 'flex';
+      document.getElementById('navAuthLink').innerHTML =
+        `<a href="#" onclick="logout()">Logout (${sessionStorage.getItem('adminUser')})</a>`;
+    }
+    function logout() {
+      sessionStorage.removeItem('adminToken');
+      sessionStorage.removeItem('adminUser');
+      window.location.href = 'login.html';
     }
 
     /* Init */

@@ -6,23 +6,15 @@
   <title>Glow Society — Manage Products</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* ---- Top action bar (matches Figma) ---- */
+    /* Action bar */
     .action-bar {
       background: #fff;
       border-bottom: 1px solid var(--border);
-      padding: 0.85rem 2rem;
+      padding: 0.75rem 2rem;
       display: flex;
       align-items: center;
       gap: 0.75rem;
     }
-    .action-bar .breadcrumb-nav {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-right: auto;
-    }
-    .action-bar .breadcrumb-nav a { color: var(--muted); }
-
-    /* Sort in action bar */
     .sort-label { font-size: 0.82rem; color: var(--muted); }
     .sort-select {
       padding: 0.35rem 0.7rem;
@@ -35,222 +27,224 @@
       cursor: pointer;
     }
     .action-bar .btn { font-size: 0.8rem; padding: 0.38rem 1rem; }
+    .action-bar .btn.active-mode { background: var(--charcoal); color: #fff; }
+    .action-bar .btn-danger.active-mode { background: #c0392b; border-color: #c0392b; color: #fff; }
 
-    /* ---- Main layout: sidebar + content ---- */
+    /* Layout */
     .manage-wrap {
       display: grid;
       grid-template-columns: 200px 1fr;
-      min-height: calc(100vh - 90px - 180px - 54px);
+      min-height: calc(100vh - 90px - 200px - 48px);
     }
 
-    /* ---- Sidebar ---- */
+    /* Sidebar */
     .manage-sidebar {
       background: #fff;
       border-right: 1px solid var(--border);
       padding: 1.5rem 1.2rem;
     }
     .sidebar-title {
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--charcoal);
-      margin-bottom: 0.8rem;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--charcoal); margin-bottom: 0.8rem;
     }
     .category-list { list-style: none; }
     .category-list li {
-      font-size: 0.85rem;
-      color: var(--charcoal);
-      padding: 0.28rem 0;
-      cursor: pointer;
-      transition: color 0.15s;
+      font-size: 0.85rem; color: var(--charcoal);
+      padding: 0.28rem 0.4rem; cursor: pointer;
+      border-radius: 3px; transition: color 0.15s;
     }
     .category-list li:hover  { color: var(--pink); }
     .category-list li.active { color: var(--pink); font-weight: 500; }
 
-    /* ---- Product table area ---- */
-    .manage-content {
-      padding: 1.5rem 2rem;
-      background: #fafafa;
-    }
+    /* Content */
+    .manage-content { padding: 1.5rem 2rem; background: #fafafa; }
 
-    /* Product grid (same as search but with overlay edit/delete) */
+    /* Product grid */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
     }
-
     .product-card {
       background: #fff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
       position: relative;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
     }
+    .product-card:hover { box-shadow: 0 4px 16px rgba(180,120,110,0.14); }
     .product-img {
-      width: 100%;
-      aspect-ratio: 1;
+      width: 100%; aspect-ratio: 1;
       background: var(--cream);
       display: flex; align-items: center; justify-content: center;
-      font-size: 3rem;
-      overflow: hidden;
+      font-size: 3rem; overflow: hidden;
     }
-    .product-img img { width:100%; height:100%; object-fit:cover; }
-
-    /* Wishlist + K badges */
-    .product-badges {
-      position: absolute;
-      bottom: calc(40% + 8px); right: 8px;
-      display: flex; gap: 4px;
-    }
-    .badge-icon {
-      width: 24px; height: 24px;
-      background: rgba(0,0,0,0.3);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.65rem; color: #fff;
-      cursor: pointer; border: none;
-      transition: background 0.2s;
-    }
-    .badge-icon:hover { background: var(--pink); }
-    .badge-k {
-      background: #222; font-size: 0.6rem;
-      font-weight: 600; border-radius: 3px;
-      width: auto; padding: 0 5px;
-    }
-
+    .product-img img { width:100%; height:100%; object-fit:cover; display:block; }
     .product-body { padding: 0.65rem 0.75rem 0.75rem; }
     .product-brand { font-size: 0.72rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.1rem; }
-    .product-name  { font-size: 0.75rem; color: var(--muted); line-height: 1.3; margin-bottom: 0.4rem; }
-    .product-price { font-size: 0.82rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.25rem; }
+    .product-name  { font-size: 0.75rem; color: var(--muted); line-height: 1.3; margin-bottom: 0.35rem; }
+    .product-price { font-size: 0.82rem; font-weight: 500; color: var(--charcoal); margin-bottom: 0.2rem; }
     .product-stars { font-size: 0.68rem; color: var(--pink); }
+
+    /* Mode overlay on card */
+    .card-overlay {
+      position: absolute; inset: 0;
+      display: none;
+      align-items: center; justify-content: center;
+      gap: 0.5rem;
+    }
+    .card-overlay.show { display: flex; }
+    .edit-overlay   { background: rgba(0,0,0,0.38); }
+    .delete-overlay { background: rgba(192,57,43,0.42); }
 
     /* View more */
     .view-more-row {
-      text-align: center;
-      padding: 1.5rem 0 0.5rem;
-      font-size: 0.82rem;
-      color: var(--muted);
+      text-align: center; padding: 1.5rem 0 0.5rem;
+      font-size: 0.82rem; color: var(--muted);
     }
     .view-more-row a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      padding: 0.45rem 1.5rem;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--charcoal);
-      font-size: 0.82rem;
+      display: inline-block; margin-top: 0.5rem;
+      padding: 0.45rem 1.5rem; border: 1px solid var(--border);
+      border-radius: 4px; color: var(--charcoal); font-size: 0.82rem;
       transition: background 0.2s;
     }
     .view-more-row a:hover { background: var(--cream); }
 
-    /* ---- ADD ITEM panel ---- */
-    .add-panel {
+    /* ===================== ADD / EDIT FORM PANEL ===================== */
+    .form-panel {
       background: #fff;
       border-radius: var(--radius);
       padding: 2rem 2.5rem;
-      display: none;
-      box-shadow: var(--shadow);
-    }
-    .add-panel.show { display: block; }
-    .add-panel h2 {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 300;
       margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .form-panel.show { display: block; }
+    .form-panel h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem; font-weight: 300;
+      margin-bottom: 1.2rem; padding-bottom: 0.75rem;
       border-bottom: 1px solid var(--border);
     }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.5rem; }
-    .form-grid .span-2 { grid-column: 1/-1; }
+    .form-grid .span-2 { grid-column: 1 / -1; }
 
-    /* Image upload area */
-    .img-upload-grid { display: grid; grid-template-columns: 80px 1fr; gap: 0.8rem; margin-bottom: 1.5rem; }
-    .thumb-uploads { display: flex; flex-direction: column; gap: 0.5rem; }
-    .img-placeholder {
+    /* Image upload — FIXED preview */
+    .img-upload-area {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .thumb-stack { display: flex; flex-direction: column; gap: 0.5rem; }
+    .img-slot {
+      position: relative;
       border: 1.5px dashed var(--border);
-      border-radius: var(--radius);
+      border-radius: 4px;
+      background: #faf8f6;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .img-slot:hover { border-color: var(--pink); }
+    .img-slot.thumb-slot { width: 90px; height: 90px; }
+    .img-slot.main-slot  { aspect-ratio: 1; }
+    .img-slot input[type=file] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+      z-index: 2;
+    }
+    .img-slot .placeholder {
+      position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; background: #f9f5f3;
-      transition: border-color 0.2s, background 0.2s;
-      position: relative; font-size: 1.2rem;
+      font-size: 1.4rem; color: var(--border);
+      pointer-events: none;
     }
-    .img-placeholder:hover { border-color: var(--pink); background: var(--pink-light); }
-    .img-placeholder input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
-    .thumb-ph { width:80px; height:80px; }
-    .main-ph  { aspect-ratio:1; font-size:2rem; }
-    .edit-icon { position:absolute; bottom:4px; right:4px; font-size:0.7rem; color:var(--muted); }
-
-    /* Form tab nav */
-    .form-tab-nav { display:flex; border-bottom:1px solid var(--border); margin-bottom:1rem; }
-    .form-tab-btn {
-      padding:0.5rem 1rem; background:none; border:none;
-      border-bottom:2px solid transparent; margin-bottom:-1px;
-      font-family:var(--font-body); font-size:0.85rem;
-      cursor:pointer; color:var(--muted); transition:color 0.2s;
+    .img-slot.main-slot .placeholder { font-size: 2rem; }
+    /* Preview image inside slot */
+    .img-slot img.preview {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: none;
+      z-index: 1;
     }
-    .form-tab-btn.active { color:var(--charcoal); border-bottom-color:var(--charcoal); font-weight:500; }
-    .form-tab-content { display:none; }
-    .form-tab-content.active { display:block; }
+    .img-slot img.preview.show { display: block; }
 
     /* Star rating input */
-    .star-input { font-size:1.3rem; cursor:pointer; color:var(--border); }
-    .star-input.on { color:var(--pink); }
+    .star-row { display: flex; gap: 4px; cursor: pointer; }
+    .star-inp { font-size: 1.4rem; color: var(--border); transition: color 0.1s; }
+    .star-inp.on { color: var(--pink); }
 
     /* Variant rows */
-    .variant-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; }
-    .variant-row input { flex:1; }
-    .add-variant-btn {
-      background:none; border:1px dashed var(--border); border-radius:var(--radius);
-      padding:0.3rem 0.8rem; font-size:0.8rem; color:var(--muted);
-      cursor:pointer; margin-top:0.3rem; transition:border-color 0.2s,color 0.2s;
+    .variant-row { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.4rem; }
+    .variant-row input { flex: 1; }
+    .add-var-btn {
+      background: none; border: 1px dashed var(--border);
+      border-radius: 4px; padding: 0.3rem 0.8rem;
+      font-size: 0.78rem; color: var(--muted); cursor: pointer;
+      margin-top: 0.3rem; transition: border-color 0.2s, color 0.2s;
     }
-    .add-variant-btn:hover { border-color:var(--pink); color:var(--pink); }
+    .add-var-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* Form tabs */
+    .form-tab-nav { display: flex; border-bottom: 1px solid var(--border); margin: 1rem 0 0.75rem; }
+    .ftab-btn {
+      padding: 0.45rem 1rem; background: none; border: none;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      font-family: var(--font-body); font-size: 0.84rem;
+      cursor: pointer; color: var(--muted);
+    }
+    .ftab-btn.active { color: var(--charcoal); border-bottom-color: var(--charcoal); }
+    .ftab-content { display: none; }
+    .ftab-content.active { display: block; }
 
     /* Toast */
     .toast {
-      position:fixed; bottom:2rem; right:2rem;
-      background:var(--charcoal); color:#fff;
-      padding:0.75rem 1.5rem; border-radius:var(--radius);
-      font-size:0.88rem; opacity:0; transform:translateY(10px);
-      transition:opacity 0.3s,transform 0.3s; z-index:999;
+      position: fixed; bottom: 2rem; right: 2rem;
+      background: var(--charcoal); color: #fff;
+      padding: 0.75rem 1.5rem; border-radius: 4px;
+      font-size: 0.88rem; z-index: 999;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
     }
-    .toast.show { opacity:1; transform:translateY(0); }
+    .toast.show { opacity: 1; transform: translateY(0); }
 
-    /* Delete confirm modal */
+    /* Delete modal */
     .modal-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,0.35);
-      display:none; align-items:center; justify-content:center; z-index:998;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.35);
+      display: none; align-items: center; justify-content: center; z-index: 998;
     }
-    .modal-overlay.show { display:flex; }
+    .modal-overlay.show { display: flex; }
     .modal {
-      background:#fff; padding:2rem 2.5rem; border-radius:var(--radius);
-      max-width:360px; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.15);
+      background: #fff; padding: 2rem 2.5rem; border-radius: 6px;
+      max-width: 360px; text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     }
-    .modal h3 { font-family:var(--font-display); font-size:1.3rem; margin-bottom:0.5rem; }
-    .modal p  { color:var(--muted); font-size:0.85rem; margin-bottom:1.5rem; }
-    .modal-btns { display:flex; gap:1rem; justify-content:center; }
+    .modal h3 { font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 0.5rem; }
+    .modal p  { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .modal-btns { display: flex; gap: 1rem; justify-content: center; }
   </style>
 </head>
 <body>
 
-  <!-- ===================== HEADER ===================== -->
+  <!-- HEADER -->
   <header>
-    <a href="index.html" class="logo">
-      <span>GLOW ✳</span>
-      <span>SOCIETY</span>
-    </a>
+    <a href="index.html" class="logo"><span>GLOW ✳</span><span>SOCIETY</span></a>
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="search.html">Shop</a></li>
         <li><a href="team.html">Our Team</a></li>
-        <li><a href="login.html">Admin</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
       </ul>
     </nav>
     <div class="header-right">
-      <span class="icon-user">&#9752;</span>
+      <span style="color:#fff;font-size:0.82rem" id="adminLabel"></span>
       <div class="header-search">
         <input type="text" placeholder="Search..." />
         <button>&#128269;</button>
@@ -258,25 +252,20 @@
     </div>
   </header>
 
-  <!-- ===================== ACTION BAR ===================== -->
+  <!-- Action bar -->
   <div class="action-bar">
-    <nav class="breadcrumb-nav">
-      <a href="index.html">breadcrumbs</a> › <a href="search.html">breadcrumbs</a>
-    </nav>
     <span class="sort-label">Sort:</span>
     <select class="sort-select" id="sortSelect" onchange="renderGrid()">
-      <option value="bestseller">Best seller</option>
-      <option value="new">New arrivals</option>
+      <option value="default">Default</option>
       <option value="price-asc">Price ↑</option>
       <option value="price-desc">Price ↓</option>
       <option value="rating">High rated</option>
     </select>
-    <button class="btn btn-sm" onclick="showAddPanel()">Add Item</button>
-    <button class="btn btn-sm" id="editModeBtn" onclick="toggleEditMode()">Edit Item</button>
-    <button class="btn btn-sm btn-danger" id="deleteModeBtn" onclick="toggleDeleteMode()">Delete Item</button>
+    <button class="btn btn-sm" onclick="openAdd()">Add Item</button>
+    <button class="btn btn-sm" id="editModeBtn" onclick="toggleMode('edit')">Edit Item</button>
+    <button class="btn btn-sm btn-danger" id="deleteModeBtn" onclick="toggleMode('delete')">Delete Item</button>
   </div>
 
-  <!-- ===================== MAIN ===================== -->
   <main>
     <div class="manage-wrap">
 
@@ -284,127 +273,161 @@
       <aside class="manage-sidebar">
         <div class="sidebar-title">Category</div>
         <ul class="category-list" id="categoryList">
-          <li class="active" data-cat="">Makeup</li>
-          <li data-cat="skincare">Skincare</li>
-          <li data-cat="haircare">Hair care</li>
-          <li data-cat="bath">Bath &amp; Body</li>
-          <li data-cat="personal">Personal care</li>
-          <li data-cat="diet">Diet</li>
-          <li data-cat="health">Health &amp; Vitamin supplement</li>
-          <li data-cat="dermo">Dermo</li>
-          <li data-cat="perfume">Perfume &amp; Fragrance</li>
-          <li data-cat="nail">Nail care</li>
-          <li data-cat="accessories">Beauty tools &amp; Accessories</li>
+          <li class="active" data-cat="">All</li>
+          <li data-cat="Makeup">Makeup</li>
+          <li data-cat="Skincare">Skincare</li>
+          <li data-cat="Hair care">Hair care</li>
+          <li data-cat="Bath & Body">Bath &amp; Body</li>
+          <li data-cat="Personal care">Personal care</li>
+          <li data-cat="Diet">Diet</li>
+          <li data-cat="Health & Vitamin supplement">Health &amp; Vitamin</li>
+          <li data-cat="Dermo">Dermo</li>
+          <li data-cat="Perfume & Fragrance">Perfume &amp; Fragrance</li>
+          <li data-cat="Nail care">Nail care</li>
+          <li data-cat="Beauty tools & Accessories">Beauty tools</li>
         </ul>
       </aside>
 
       <!-- Content -->
       <div class="manage-content">
 
-        <!-- ADD ITEM form panel -->
-        <div class="add-panel" id="addPanel">
-          <h2>Add New Product</h2>
+        <!-- ===================== ADD FORM ===================== -->
+        <div class="form-panel" id="addPanel">
+          <h2 id="formTitle">Add New Product</h2>
 
-          <div class="img-upload-grid">
-            <div class="thumb-uploads">
-              <div class="img-placeholder thumb-ph">+<span class="edit-icon">🖼</span><input type="file" accept="image/*" /></div>
-              <div class="img-placeholder thumb-ph">+<span class="edit-icon">🖼</span><input type="file" accept="image/*" /></div>
-              <div class="img-placeholder thumb-ph">+<span class="edit-icon">🖼</span><input type="file" accept="image/*" /></div>
+          <!-- Image upload area -->
+          <div class="img-upload-area">
+            <div class="thumb-stack">
+              <div class="img-slot thumb-slot" onclick="triggerFile('fileThumb0')">
+                <input type="file" id="fileThumb0" accept="image/*" onchange="previewSlot(this,'previewThumb0')" />
+                <img class="preview" id="previewThumb0" />
+                <div class="placeholder">+</div>
+              </div>
+              <div class="img-slot thumb-slot" onclick="triggerFile('fileThumb1')">
+                <input type="file" id="fileThumb1" accept="image/*" onchange="previewSlot(this,'previewThumb1')" />
+                <img class="preview" id="previewThumb1" />
+                <div class="placeholder">+</div>
+              </div>
+              <div class="img-slot thumb-slot" onclick="triggerFile('fileThumb2')">
+                <input type="file" id="fileThumb2" accept="image/*" onchange="previewSlot(this,'previewThumb2')" />
+                <img class="preview" id="previewThumb2" />
+                <div class="placeholder">+</div>
+              </div>
             </div>
-            <div class="img-placeholder main-ph">+<span class="edit-icon">🖼</span><input type="file" accept="image/*" /></div>
+            <div class="img-slot main-slot" onclick="triggerFile('fileMain')">
+              <input type="file" id="fileMain" accept="image/*" onchange="previewSlot(this,'previewMain')" />
+              <img class="preview" id="previewMain" />
+              <div class="placeholder">+</div>
+            </div>
           </div>
 
           <div class="form-grid">
             <div class="form-group span-2">
-              <label for="addName">Product Name</label>
-              <input type="text" id="addName" placeholder="Enter product name…" />
+              <label for="fName">Product Name</label>
+              <input type="text" id="fName" placeholder="Enter product name…" />
             </div>
             <div class="form-group span-2">
-              <label for="addDesc">Description</label>
-              <textarea id="addDesc" rows="3" placeholder="Enter product description…"></textarea>
+              <label for="fDesc">Description</label>
+              <textarea id="fDesc" rows="2" placeholder="Short description…"></textarea>
             </div>
             <div class="form-group">
-              <label>Rating</label>
-              <div id="starInput">
-                <span class="star-input" onclick="setRating(1)">★</span>
-                <span class="star-input" onclick="setRating(2)">★</span>
-                <span class="star-input" onclick="setRating(3)">★</span>
-                <span class="star-input" onclick="setRating(4)">★</span>
-                <span class="star-input" onclick="setRating(5)">★</span>
-              </div>
-              <input type="hidden" id="addRating" value="0" />
+              <label for="fBrand">Brand</label>
+              <input type="text" id="fBrand" placeholder="Brand name…" />
             </div>
             <div class="form-group">
-              <label for="addPrice">Price (฿)</label>
-              <input type="number" id="addPrice" placeholder="0" min="0" />
-            </div>
-            <div class="form-group">
-              <label for="addCategory">Category</label>
-              <select id="addCategory">
-                <option value="makeup">Makeup</option>
-                <option value="skincare">Skincare</option>
-                <option value="haircare">Hair care</option>
-                <option value="bath">Bath &amp; Body</option>
-                <option value="personal">Personal care</option>
+              <label for="fCategory">Category</label>
+              <select id="fCategory">
+                <option value="Makeup">Makeup</option>
+                <option value="Skincare">Skincare</option>
+                <option value="Hair care">Hair care</option>
+                <option value="Bath & Body">Bath &amp; Body</option>
+                <option value="Personal care">Personal care</option>
+                <option value="Diet">Diet</option>
+                <option value="Perfume & Fragrance">Perfume &amp; Fragrance</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="addBrand">Brand</label>
-              <input type="text" id="addBrand" placeholder="Brand name…" />
+              <label for="fPrice">Price (฿)</label>
+              <input type="number" id="fPrice" placeholder="0.00" min="0" step="0.01" />
             </div>
-            <div class="form-group span-2">
-              <label>Volume</label>
-              <div id="volumeList">
-                <div class="variant-row"><input type="text" placeholder="e.g. 50ml" /></div>
+            <div class="form-group">
+              <label>Rating</label>
+              <div class="star-row" id="starRow">
+                <span class="star-inp" data-v="1" onclick="setRating(1)">★</span>
+                <span class="star-inp" data-v="2" onclick="setRating(2)">★</span>
+                <span class="star-inp" data-v="3" onclick="setRating(3)">★</span>
+                <span class="star-inp" data-v="4" onclick="setRating(4)">★</span>
+                <span class="star-inp" data-v="5" onclick="setRating(5)">★</span>
               </div>
-              <button class="add-variant-btn" onclick="addVariantRow('volumeList')">+ Add volume</button>
+              <input type="hidden" id="fRating" value="0" />
             </div>
-            <div class="form-group span-2">
+            <div class="form-group">
               <label>Color</label>
               <div id="colorList">
                 <div class="variant-row">
-                  <input type="color" value="#f5c5c0" style="width:40px;height:36px;padding:2px;border:1.5px solid var(--border);border-radius:4px;cursor:pointer" />
-                  <input type="text" placeholder="Color name" />
+                  <input type="color" value="#f5c5c0" style="width:38px;height:34px;border:1px solid var(--border);border-radius:4px;padding:2px;cursor:pointer" />
+                  <input type="text" placeholder="Color name e.g. Black" />
                 </div>
               </div>
-              <button class="add-variant-btn" onclick="addColorRow('colorList')">+ Add color</button>
+              <button class="add-var-btn" onclick="addColorRow()">+ Add color</button>
+            </div>
+            <div class="form-group">
+              <label>Size / Volume</label>
+              <div id="sizeList">
+                <div class="variant-row">
+                  <input type="text" placeholder="e.g. 9 ml" />
+                </div>
+              </div>
+              <button class="add-var-btn" onclick="addSizeRow()">+ Add size</button>
+            </div>
+            <div class="form-group">
+              <label for="fQty">Quantity in Stock</label>
+              <input type="number" id="fQty" placeholder="0" min="0" />
+            </div>
+            <div class="form-group">
+              <label for="fFlag">Special Flag</label>
+              <select id="fFlag">
+                <option value="">None</option>
+                <option value="Cruelty-free">Cruelty-free</option>
+                <option value="Dermatologically-tested">Dermatologically-tested</option>
+              </select>
             </div>
           </div>
 
+          <!-- Detail tabs -->
           <div class="form-tab-nav">
-            <button class="form-tab-btn active" onclick="openFormTab('details',this)">Product details</button>
-            <button class="form-tab-btn" onclick="openFormTab('howto',this)">How to</button>
-            <button class="form-tab-btn" onclick="openFormTab('ingredients',this)">Ingredients</button>
+            <button class="ftab-btn active" onclick="openFTab('details',this)">Product details</button>
+            <button class="ftab-btn" onclick="openFTab('howto',this)">How to</button>
+            <button class="ftab-btn" onclick="openFTab('ingredients',this)">Ingredients</button>
           </div>
-          <div class="form-tab-content active" id="ftab-details">
-            <div class="form-group"><textarea id="addDetails" rows="4" placeholder="Enter product details…"></textarea></div>
+          <div class="ftab-content active" id="ftab-details">
+            <div class="form-group"><textarea id="fDetails" rows="4" placeholder="Enter product details…"></textarea></div>
           </div>
-          <div class="form-tab-content" id="ftab-howto">
-            <div class="form-group"><textarea id="addHowto" rows="4" placeholder="Enter how to use…"></textarea></div>
+          <div class="ftab-content" id="ftab-howto">
+            <div class="form-group"><textarea id="fHowto" rows="4" placeholder="How to use…"></textarea></div>
           </div>
-          <div class="form-tab-content" id="ftab-ingredients">
-            <div class="form-group"><textarea id="addIngredients" rows="4" placeholder="Enter ingredients…"></textarea></div>
+          <div class="ftab-content" id="ftab-ingredients">
+            <div class="form-group"><textarea id="fIngredients" rows="4" placeholder="Ingredients list…"></textarea></div>
           </div>
 
-          <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1rem">
-            <button class="btn" onclick="hideAddPanel()">Cancel</button>
-            <button class="btn btn-primary" onclick="saveNewProduct()">Save</button>
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;margin-top:1rem">
+            <button class="btn" onclick="closeForm()">Cancel</button>
+            <button class="btn btn-primary" id="formSaveBtn" onclick="saveForm()">Save</button>
           </div>
         </div>
 
         <!-- Product grid -->
         <div class="product-grid" id="productGrid"></div>
 
-        <div class="view-more-row" id="viewMoreRow">
+        <div class="view-more-row">
           <span id="countLabel"></span><br/>
-          <a href="#" id="viewMoreBtn" onclick="loadMore();return false;">View more</a>
+          <a href="#" id="viewMoreBtn" style="display:none" onclick="loadMore();return false;">View more</a>
         </div>
-
       </div>
     </div>
   </main>
 
-  <!-- ===================== FOOTER ===================== -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-col">
       <h4>About us</h4>
@@ -423,14 +446,12 @@
     <div class="footer-logo">GLOW ✳<br/>SOCIETY</div>
   </footer>
 
-  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <!-- Delete modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <h3>Delete Product?</h3>
-      <p id="modalMsg">This action cannot be undone.</p>
+      <p id="modalMsg"></p>
       <div class="modal-btns">
         <button class="btn" onclick="closeModal()">Cancel</button>
         <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
@@ -440,109 +461,307 @@
 
   <script>
     /* ============================================================
-       PRODUCT DATA
+       STATE
        ============================================================ */
     let products = [
-      { id:1,  brand:'MAYBELLINE NEW YORK', name:'Hyper Curl Waterproof Mascara',      price:179, rating:4, category:'makeup', emoji:'🖤', bg:'#f0ece8' },
-      { id:2,  brand:'MAYBELLINE NEW YORK', name:'Fit Me Matte + Poreless Foundation', price:249, rating:4, category:'makeup', emoji:'💄', bg:'#f4e8e0' },
-      { id:3,  brand:'MAYBELLINE NEW YORK', name:'SuperStay Matte Ink Liquid Lipstick',price:249, rating:4, category:'makeup', emoji:'💋', bg:'#f4dcd8' },
-      { id:4,  brand:'MAYBELLINE NEW YORK', name:'Sky High Mascara',                   price:169, rating:4, category:'makeup', emoji:'✨', bg:'#e8e4f0' },
-      { id:5,  brand:'KISS ME',             name:'Heroine Make Volume & Curl Waterproof',price:435,rating:4,category:'makeup', emoji:'👁', bg:'#f0e8ec' },
-      { id:6,  brand:'NARIO LLARIAS',       name:'Super Matte Powder',                 price:105, rating:4, category:'makeup', emoji:'🌸', bg:'#f4e4e8' },
-      { id:7,  brand:'BROWIT',              name:'Tip Brow Pencil',                    price:118, rating:4, category:'makeup', emoji:'✏️',bg:'#ece8e0' },
-      { id:8,  brand:'HERREEZA',            name:'Contour Blush Palette',              price:299, rating:4, category:'makeup', emoji:'🎨', bg:'#f4e0e4' },
-      { id:9,  brand:'ROMAND',              name:'Han All Shadow',                     price:349, rating:4, category:'makeup', emoji:'💜', bg:'#e8e0f0' },
+      { id:'P001', brand:'MAYBELLINE NEW YORK', name:'Volume Express Hyper Curl Waterproof Mascara', price:179, rating:4, category:'Makeup',   img:null, emoji:'🖤', bg:'#f0ece8', details:'', howto:'', ingredients:'' },
+      { id:'P002', brand:'MAYBELLINE NEW YORK', name:'Fit Me Matte + Poreless Foundation',           price:249, rating:4, category:'Makeup',   img:null, emoji:'💄', bg:'#f4e8e0', details:'', howto:'', ingredients:'' },
+      { id:'P003', brand:'MAYBELLINE NEW YORK', name:'SuperStay Matte Ink Liquid Lipstick',          price:249, rating:4, category:'Makeup',   img:null, emoji:'💋', bg:'#f4dcd8', details:'', howto:'', ingredients:'' },
+      { id:'P004', brand:'MAYBELLINE NEW YORK', name:'Sky High Mascara',                             price:169, rating:4, category:'Makeup',   img:null, emoji:'✨', bg:'#e8e4f0', details:'', howto:'', ingredients:'' },
+      { id:'P005', brand:'KISS ME',             name:'Heroine Make Volume & Curl Waterproof',        price:435, rating:4, category:'Makeup',   img:null, emoji:'👁', bg:'#f0e8ec', details:'', howto:'', ingredients:'' },
+      { id:'P006', brand:'NARIO LLARIAS',        name:'Super Matte Pressed Powder',                  price:105, rating:4, category:'Makeup',   img:null, emoji:'🌸', bg:'#f4e4e8', details:'', howto:'', ingredients:'' },
+      { id:'P007', brand:'BROWIT',              name:'Tip Brow Pencil',                              price:118, rating:4, category:'Makeup',   img:null, emoji:'✏️',bg:'#ece8e0', details:'', howto:'', ingredients:'' },
+      { id:'P008', brand:'HERREEZA',            name:'Contour Blush Palette',                        price:299, rating:4, category:'Makeup',   img:null, emoji:'🎨', bg:'#f4e0e4', details:'', howto:'', ingredients:'' },
+      { id:'P009', brand:'ROMAND',              name:'Han All Shadow Palette',                       price:349, rating:4, category:'Makeup',   img:null, emoji:'💜', bg:'#e8e0f0', details:'', howto:'', ingredients:'' },
+      { id:'P010', brand:'COSRX',               name:'Advanced Snail 96 Mucin Power Essence',       price:750, rating:5, category:'Skincare', img:null, emoji:'🌿', bg:'#d4edd4', details:'', howto:'', ingredients:'' },
     ];
-    let nextId = 10;
-    let visibleCount = 9;
-    let activeCategory = '';
-    let editMode   = false;
-    let deleteMode = false;
-    let deleteId   = null;
-    let currentRating = 0;
 
-    /* ---- Category click ---- */
+    let currentMode    = '';   // '' | 'edit' | 'delete'
+    let editingId      = null;
+    let deleteId       = null;
+    let currentRating  = 0;
+    let activeCategory = '';
+    let visibleCount   = 9;
+
+    /* ============================================================
+       AUTH GUARD
+       ============================================================ */
+    if (!sessionStorage.getItem('adminToken')) {
+      window.location.href = 'login.html';
+    }
+    const adminUser = sessionStorage.getItem('adminUser') || 'Admin';
+    document.getElementById('adminLabel').textContent = '👤 ' + adminUser;
+
+    function logout() {
+      sessionStorage.removeItem('adminToken');
+      sessionStorage.removeItem('adminUser');
+      window.location.href = 'login.html';
+    }
+
+    /* ============================================================
+       CATEGORY FILTER
+       ============================================================ */
     document.getElementById('categoryList').addEventListener('click', e => {
       const li = e.target.closest('li');
       if (!li) return;
       document.querySelectorAll('.category-list li').forEach(x => x.classList.remove('active'));
       li.classList.add('active');
       activeCategory = li.dataset.cat;
-      visibleCount = 9;
-      renderGrid();
+      visibleCount   = 9;
+      fetchAndRender();
     });
 
-    /* ---- Render grid ---- */
+    /* ============================================================
+       FETCH + RENDER
+       ============================================================ */
+    async function fetchAndRender() {
+      try {
+        const params = new URLSearchParams();
+        if (activeCategory) params.append('category', activeCategory);
+        const res = await fetch(`http://localhost:3000/api/products/search?${params}`, {
+          headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminToken')}` }
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        products = data.products;
+      } catch {
+        /* fallback: filter local array */
+      }
+      renderGrid();
+    }
+
     function renderGrid() {
-      const sort = document.getElementById('sortSelect').value;
-      let list   = activeCategory ? products.filter(p => p.category === activeCategory) : [...products];
+      const sort   = document.getElementById('sortSelect').value;
+      let list     = activeCategory ? products.filter(p => p.category === activeCategory) : [...products];
       if (sort === 'price-asc')  list.sort((a,b) => a.price - b.price);
       if (sort === 'price-desc') list.sort((a,b) => b.price - a.price);
       if (sort === 'rating')     list.sort((a,b) => b.rating - a.rating);
 
+      const total   = list.length;
       const visible = list.slice(0, visibleCount);
       const grid    = document.getElementById('productGrid');
-      const total   = list.length;
 
       grid.innerHTML = visible.map(p => {
-        const stars = '★'.repeat(p.rating) + '☆'.repeat(5-p.rating);
+        const stars = '★'.repeat(Math.round(p.rating||0)) + '☆'.repeat(5-Math.round(p.rating||0));
+        const imgContent = p.img
+          ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none'" />`
+          : `<span>${p.emoji||'🛍'}</span>`;
+
+        // Overlay based on mode
         let overlay = '';
-        if (editMode)   overlay = `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center"><button class="btn btn-sm" style="background:#fff" onclick="event.stopPropagation();editProduct(${p.id})">Edit</button></div>`;
-        if (deleteMode) overlay = `<div style="position:absolute;inset:0;background:rgba(192,57,43,0.35);display:flex;align-items:center;justify-content:center"><button class="btn btn-sm btn-danger" style="background:#c0392b;color:#fff;border-color:#c0392b" onclick="event.stopPropagation();confirmDelete(${p.id},'${p.name}')">Delete</button></div>`;
+        if (currentMode === 'edit') {
+          overlay = `<div class="card-overlay edit-overlay show">
+            <button class="btn btn-sm" style="background:#fff;color:var(--charcoal)"
+              onclick="event.stopPropagation();openEdit('${p.id}')">Edit</button>
+          </div>`;
+        } else if (currentMode === 'delete') {
+          overlay = `<div class="card-overlay delete-overlay show">
+            <button class="btn btn-sm" style="background:#c0392b;color:#fff;border-color:#c0392b"
+              onclick="event.stopPropagation();confirmDelete('${p.id}','${p.name.replace(/'/g,"\\'")}')">Delete</button>
+          </div>`;
+        }
 
         return `
-          <div class="product-card" onclick="${editMode||deleteMode?'':' window.location.href=\'detail.html?id='+p.id+'\''}">
-            <div class="product-img" style="background:${p.bg}; position:relative">
-              <span>${p.emoji}</span>
+          <div class="product-card" onclick="${currentMode?'':'window.location.href=\'detail.html?id='+p.id+'\''}">
+            <div class="product-img" style="background:${p.bg||'var(--cream)'}; position:relative;">
+              ${imgContent}
               ${overlay}
-              <div class="product-badges">
-                <button class="badge-icon" onclick="event.stopPropagation()" title="Wishlist">♡</button>
-                <button class="badge-icon badge-k" onclick="event.stopPropagation()">K</button>
-              </div>
             </div>
             <div class="product-body">
-              <div class="product-brand">${p.brand}</div>
+              <div class="product-brand">${p.brand||''}</div>
               <div class="product-name">${p.name}</div>
-              <div class="product-price">$ ${p.price.toFixed(2)}</div>
+              <div class="product-price">฿ ${Number(p.price).toFixed(2)}</div>
               <div class="product-stars">${stars}</div>
             </div>
           </div>`;
       }).join('');
 
       document.getElementById('countLabel').textContent =
-        `You have seen ${Math.min(visibleCount,total)} products out of ${total}`;
-      document.getElementById('viewMoreBtn').style.display = visibleCount >= total ? 'none' : 'inline-block';
+        `Showing ${Math.min(visibleCount,total)} of ${total} products`;
+      document.getElementById('viewMoreBtn').style.display =
+        visibleCount >= total ? 'none' : 'inline-block';
     }
 
     function loadMore() { visibleCount += 9; renderGrid(); }
 
-    /* ---- Edit / Delete mode toggles ---- */
-    function toggleEditMode() {
-      editMode   = !editMode;
-      deleteMode = false;
-      document.getElementById('editModeBtn').style.background   = editMode ? 'var(--charcoal)' : '';
-      document.getElementById('editModeBtn').style.color        = editMode ? '#fff' : '';
-      document.getElementById('deleteModeBtn').style.background = '';
-      document.getElementById('deleteModeBtn').style.color      = '';
-      renderGrid();
-    }
-    function toggleDeleteMode() {
-      deleteMode = !deleteMode;
-      editMode   = false;
-      document.getElementById('deleteModeBtn').style.background = deleteMode ? '#c0392b' : '';
-      document.getElementById('deleteModeBtn').style.color      = deleteMode ? '#fff' : '';
-      document.getElementById('deleteModeBtn').style.borderColor= deleteMode ? '#c0392b' : '';
-      document.getElementById('editModeBtn').style.background   = '';
-      document.getElementById('editModeBtn').style.color        = '';
+    /* ============================================================
+       MODE TOGGLE (Edit / Delete)
+       ============================================================ */
+    function toggleMode(mode) {
+      if (currentMode === mode) {
+        currentMode = '';
+      } else {
+        currentMode = mode;
+        closeForm();
+      }
+      document.getElementById('editModeBtn').classList.toggle('active-mode', currentMode === 'edit');
+      document.getElementById('deleteModeBtn').classList.toggle('active-mode', currentMode === 'delete');
       renderGrid();
     }
 
-    /* ---- Edit: redirect to detail with edit mode ---- */
-    function editProduct(id) {
-      window.location.href = `detail.html?id=${id}&edit=1`;
+    /* ============================================================
+       ADD FORM
+       ============================================================ */
+    function openAdd() {
+      currentMode = '';
+      editingId   = null;
+      clearForm();
+      document.getElementById('formTitle').textContent   = 'Add New Product';
+      document.getElementById('formSaveBtn').textContent = 'Save';
+      document.getElementById('addPanel').classList.add('show');
+      document.getElementById('addPanel').scrollIntoView({ behavior:'smooth' });
+      renderGrid();
     }
 
-    /* ---- Delete ---- */
+    function closeForm() {
+      document.getElementById('addPanel').classList.remove('show');
+      editingId = null;
+      clearForm();
+    }
+
+    function clearForm() {
+      ['fName','fBrand','fPrice','fQty','fDesc','fDetails','fHowto','fIngredients'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      document.getElementById('fCategory').value = 'Makeup';
+      document.getElementById('fFlag').value      = '';
+      setRating(0);
+      // Reset image previews
+      ['previewMain','previewThumb0','previewThumb1','previewThumb2'].forEach(id => {
+        const img = document.getElementById(id);
+        if (img) img.classList.remove('show');
+      });
+      // Reset color/size lists
+      document.getElementById('colorList').innerHTML = `
+        <div class="variant-row">
+          <input type="color" value="#f5c5c0" style="width:38px;height:34px;border:1px solid var(--border);border-radius:4px;padding:2px;" />
+          <input type="text" placeholder="Color name e.g. Black" />
+        </div>`;
+      document.getElementById('sizeList').innerHTML = `
+        <div class="variant-row"><input type="text" placeholder="e.g. 9 ml" /></div>`;
+    }
+
+    /* ============================================================
+       EDIT FORM — load existing product data
+       ============================================================ */
+    function openEdit(id) {
+      const p = products.find(x => x.id === id || x.id == id);
+      if (!p) return;
+      editingId = p.id;
+
+      clearForm();
+      document.getElementById('fName').value     = p.name     || '';
+      document.getElementById('fBrand').value    = p.brand    || '';
+      document.getElementById('fPrice').value    = p.price    || '';
+      document.getElementById('fQty').value      = p.quantity || '';
+      document.getElementById('fDesc').value     = p.desc     || '';
+      document.getElementById('fDetails').value  = p.details  || '';
+      document.getElementById('fHowto').value    = p.howto    || '';
+      document.getElementById('fIngredients').value = p.ingredients || '';
+      document.getElementById('fFlag').value     = p.spe_flag || '';
+
+      // Set category
+      const catSel = document.getElementById('fCategory');
+      if ([...catSel.options].some(o => o.value === p.category)) catSel.value = p.category;
+
+      // Set rating stars
+      setRating(p.rating || 0);
+
+      // Show existing image in main preview
+      if (p.img) {
+        const prev = document.getElementById('previewMain');
+        prev.src   = p.img;
+        prev.classList.add('show');
+      }
+
+      document.getElementById('formTitle').textContent   = `Edit: ${p.name}`;
+      document.getElementById('formSaveBtn').textContent = 'Save Changes';
+      document.getElementById('addPanel').classList.add('show');
+      document.getElementById('addPanel').scrollIntoView({ behavior:'smooth' });
+    }
+
+    /* ============================================================
+       SAVE (Add or Edit)
+       ============================================================ */
+    async function saveForm() {
+      const name     = document.getElementById('fName').value.trim();
+      const brand    = document.getElementById('fBrand').value.trim();
+      const price    = parseFloat(document.getElementById('fPrice').value) || 0;
+      const qty      = parseInt(document.getElementById('fQty').value)     || 0;
+      const category = document.getElementById('fCategory').value;
+      const rating   = parseInt(document.getElementById('fRating').value)  || 0;
+      const spe_flag = document.getElementById('fFlag').value;
+      const details  = document.getElementById('fDetails').value.trim();
+      const howto    = document.getElementById('fHowto').value.trim();
+      const ingredients = document.getElementById('fIngredients').value.trim();
+
+      if (!name) { showToast('Please enter a product name.'); return; }
+
+      const payload = { name, brand, price, category, rating, spe_flag, details, howto, ingredients, quantity: qty };
+
+      if (editingId) {
+        /* ---- UPDATE ---- */
+        try {
+          const res = await fetch(`http://localhost:3000/api/products/${editingId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${sessionStorage.getItem('adminToken')}`
+            },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error();
+        } catch {}
+
+        /* Update local array */
+        const idx = products.findIndex(x => x.id === editingId);
+        if (idx >= 0) products[idx] = { ...products[idx], ...payload };
+
+        showToast('✓ Product updated!');
+      } else {
+        /* ---- INSERT ---- */
+        // Generate a temp ID for offline mode
+        const tempId = 'P' + String(Date.now()).slice(-4);
+        payload.prod_id = tempId;
+        payload.howto   = howto;
+
+        try {
+          const res = await fetch('http://localhost:3000/api/products', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${sessionStorage.getItem('adminToken')}`
+            },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+          payload.prod_id = data.id; // use real ID from server
+        } catch {}
+
+        /* Add to local array */
+        products.unshift({
+          ...payload,
+          id:    payload.prod_id,
+          img:   null,
+          emoji: '🌸',
+          bg:    '#f4e4e8'
+        });
+
+        showToast('✓ Product added!');
+      }
+
+      closeForm();
+      currentMode = '';
+      document.getElementById('editModeBtn').classList.remove('active-mode');
+      document.getElementById('deleteModeBtn').classList.remove('active-mode');
+      renderGrid();
+    }
+
+    /* ============================================================
+       DELETE
+       ============================================================ */
     function confirmDelete(id, name) {
       deleteId = id;
       document.getElementById('modalMsg').textContent = `Delete "${name}"? This cannot be undone.`;
@@ -555,94 +774,79 @@
     document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
       if (!deleteId) return;
       try {
-        /* Task 4: DELETE web service */
         await fetch(`http://localhost:3000/api/products/${deleteId}`, {
           method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminToken')||''}` }
+          headers: { 'Authorization': `Bearer ${sessionStorage.getItem('adminToken')}` }
         });
       } catch {}
-      products = products.filter(x => x.id !== deleteId);
+      products = products.filter(x => x.id !== deleteId && x.id != deleteId);
       closeModal();
       renderGrid();
       showToast('✓ Product deleted.');
     });
 
-    /* ---- Add Item panel ---- */
-    function showAddPanel() {
-      editMode = false; deleteMode = false;
-      document.getElementById('addPanel').classList.add('show');
-      document.getElementById('addPanel').scrollIntoView({ behavior: 'smooth' });
+    /* ============================================================
+       IMAGE PREVIEW — FIXED
+       ============================================================ */
+    function triggerFile(inputId) {
+      document.getElementById(inputId).click();
     }
-    function hideAddPanel() { document.getElementById('addPanel').classList.remove('show'); }
-
-    /* ---- Save new product ---- */
-    async function saveNewProduct() {
-      const name     = document.getElementById('addName').value.trim();
-      const desc     = document.getElementById('addDesc').value.trim();
-      const price    = parseFloat(document.getElementById('addPrice').value) || 0;
-      const category = document.getElementById('addCategory').value;
-      const brand    = document.getElementById('addBrand').value.trim();
-
-      if (!name) { showToast('Please enter a product name.'); return; }
-
-      const payload = { name, desc, price, category, brand, rating: currentRating };
-
-      try {
-        /* Task 4: POST to web service */
-        const res  = await fetch('http://localhost:3000/api/products', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionStorage.getItem('adminToken')||''}`
-          },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-        products.unshift({ ...payload, id: data.id, emoji: '🌸', bg: '#f4e4e8' });
-      } catch {
-        products.unshift({ ...payload, id: nextId++, emoji: '🌸', bg: '#f4e4e8' });
-      }
-
-      hideAddPanel();
-      renderGrid();
-      showToast('✓ Product added!');
+    function previewSlot(input, previewId) {
+      if (!input.files || !input.files[0]) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.getElementById(previewId);
+        img.src = e.target.result;
+        img.classList.add('show');
+      };
+      reader.readAsDataURL(input.files[0]);
     }
 
-    /* ---- Star rating ---- */
+    /* ============================================================
+       STAR RATING
+       ============================================================ */
     function setRating(val) {
       currentRating = val;
-      document.getElementById('addRating').value = val;
-      document.querySelectorAll('.star-input').forEach(s => {
-        s.classList.toggle('on', parseInt(s.textContent === '★' ? s.dataset.val : val) <= val);
-      });
-      document.querySelectorAll('#starInput .star-input').forEach((s,i) => {
-        s.classList.toggle('on', i < val);
+      document.getElementById('fRating').value = val;
+      document.querySelectorAll('.star-inp').forEach(s => {
+        s.classList.toggle('on', parseInt(s.dataset.v) <= val);
       });
     }
 
-    /* ---- Variant rows ---- */
-    function addVariantRow(id) {
+    /* ============================================================
+       VARIANT ROWS
+       ============================================================ */
+    function addColorRow() {
       const div = document.createElement('div');
       div.className = 'variant-row';
-      div.innerHTML = `<input type="text" placeholder="e.g. 100ml" /><button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:var(--muted)">✕</button>`;
-      document.getElementById(id).appendChild(div);
+      div.innerHTML = `
+        <input type="color" value="#f5c5c0" style="width:38px;height:34px;border:1px solid var(--border);border-radius:4px;padding:2px;" />
+        <input type="text" placeholder="Color name" />
+        <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem">✕</button>`;
+      document.getElementById('colorList').appendChild(div);
     }
-    function addColorRow(id) {
+    function addSizeRow() {
       const div = document.createElement('div');
       div.className = 'variant-row';
-      div.innerHTML = `<input type="color" value="#f5c5c0" style="width:40px;height:36px;padding:2px;border:1.5px solid var(--border);border-radius:4px;" /><input type="text" placeholder="Color name" /><button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:var(--muted)">✕</button>`;
-      document.getElementById(id).appendChild(div);
+      div.innerHTML = `
+        <input type="text" placeholder="e.g. 30 ml" />
+        <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem">✕</button>`;
+      document.getElementById('sizeList').appendChild(div);
     }
 
-    /* ---- Form tabs ---- */
-    function openFormTab(id, btn) {
-      document.querySelectorAll('.form-tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.form-tab-btn').forEach(b => b.classList.remove('active'));
+    /* ============================================================
+       FORM TABS
+       ============================================================ */
+    function openFTab(id, btn) {
+      document.querySelectorAll('.ftab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.ftab-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('ftab-'+id).classList.add('active');
       btn.classList.add('active');
     }
 
-    /* ---- Toast ---- */
+    /* ============================================================
+       TOAST
+       ============================================================ */
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -651,7 +855,7 @@
     }
 
     /* Init */
-    renderGrid();
+    fetchAndRender();
   </script>
 
 </body>
