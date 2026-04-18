@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glow Society — Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Full page gradient background */
+    body {
+      background: linear-gradient(160deg, #f5ddd5 0%, #eec4bb 40%, #e8b8b0 70%, #f0c8b8 100%);
+      min-height: 100vh;
+    }
+
+    main {
+      min-height: calc(100vh - 90px - 180px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+    }
+
+    /* Login card */
+    .login-card {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(8px);
+      border-radius: 8px;
+      padding: 2.8rem 3rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 4px 32px rgba(180,100,90,0.12);
+    }
+
+    .login-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--charcoal);
+      margin-bottom: 1.8rem;
+    }
+
+    .login-card .form-group { margin-bottom: 1rem; }
+    .login-card .form-group label {
+      font-size: 0.82rem;
+      color: var(--charcoal);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .login-card .form-group input {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 0.88rem;
+      padding: 0.6rem 0.9rem;
+    }
+    .login-card .form-group input:focus {
+      border-color: var(--pink);
+      background: #fff;
+    }
+
+    /* Login button — full width, pink */
+    .btn-login {
+      width: 100%;
+      padding: 0.7rem;
+      background: var(--pink);
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 400;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+      letter-spacing: 0.04em;
+    }
+    .btn-login:hover { background: #d4908a; }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Register link */
+    .register-row {
+      text-align: center;
+      margin-top: 1.2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .register-row a {
+      color: var(--pink);
+      text-decoration: underline;
+    }
+
+    /* Error message */
+    .login-error {
+      background: #fdecea;
+      color: #c0392b;
+      border: 1px solid #f5c6c4;
+      border-radius: 4px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .login-error.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header>
+    <a href="index.html" class="logo">
+      <span>GLOW ✳</span>
+      <span>SOCIETY</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="search.html">Shop</a></li>
+        <li><a href="team.html">Our Team</a></li>
+        <li><a href="login.html" class="active">Admin</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <span class="icon-user">&#9752;</span>
+      <div class="header-search">
+        <input type="text" placeholder="Search..." />
+        <button>&#128269;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN ===================== -->
+  <main>
+    <div class="login-card fade-up">
+      <h2>Login</h2>
+
+      <div class="login-error" id="loginError">Invalid email or password.</div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="" autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="" autocomplete="current-password" />
+      </div>
+
+      <button class="btn-login" id="loginBtn">Login</button>
+
+      <div class="register-row">
+        Haven't registered yet? <a href="#">register</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="footer-col">
+      <h4>About us</h4>
+      <div class="footer-links">
+        <div><a href="#">About BT store</a><a href="#">Career</a><a href="#">Our team</a></div>
+        <div><a href="#">Privacy policy</a><a href="#">Term of use</a></div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Customer care</h4>
+      <div class="footer-links">
+        <div><a href="#">Delivery</a><a href="#">FAQ</a></div>
+        <div><a href="#">Contact us</a><a href="#">Find store</a></div>
+      </div>
+    </div>
+    <div class="footer-logo">GLOW ✳<br/>SOCIETY</div>
+  </footer>
+
+  <script>
+    /* --- Login handler --- */
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errDiv   = document.getElementById('loginError');
+      const btn      = document.getElementById('loginBtn');
+
+      if (!email || !password) {
+        errDiv.textContent = 'Please enter email and password.';
+        errDiv.classList.add('show');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Logging in…';
+      errDiv.classList.remove('show');
+
+      try {
+        /* Task 4: POST to authentication web service */
+        const res  = await fetch('http://localhost:3000/api/auth/login', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+          sessionStorage.setItem('adminToken', data.token);
+          sessionStorage.setItem('adminUser',  email);
+          window.location.href = 'manage.html';
+        } else {
+          errDiv.textContent = data.message || 'Invalid email or password.';
+          errDiv.classList.add('show');
+        }
+      } catch {
+        errDiv.textContent = 'Cannot connect to server. (Start web service on port 3000)';
+        errDiv.classList.add('show');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Login';
+      }
+    });
+
+    /* Enter key triggers login */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('loginBtn').click();
+    });
+  </script>
+
+</body>
+</html>

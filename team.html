@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glow Society — Our Team</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Hero */
+    .team-hero {
+      background: var(--grad-hero);
+      padding: 4rem 3rem;
+      text-align: center;
+    }
+    .team-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+    .team-hero p {
+      color: rgba(255,255,255,0.85);
+      font-size: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* Team grid */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 2rem;
+      padding: 3rem;
+    }
+
+    /* Member card */
+    .member-card {
+      background: #fff;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s, box-shadow 0.25s;
+      text-align: center;
+    }
+    .member-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(180,120,110,0.18);
+    }
+
+    /* Avatar */
+    .member-avatar {
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .member-avatar img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .member-avatar .fallback {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+    }
+
+    /* Member info */
+    .member-info { padding: 1.2rem 1rem 1rem; }
+    .member-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      margin-bottom: 0.2rem;
+    }
+    .member-id {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.5rem;
+    }
+    .member-role {
+      font-size: 0.8rem;
+      color: var(--pink);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .member-bio {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    /* Social links */
+    .social-links { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .social-link:hover { border-color: var(--pink); color: var(--pink); }
+
+    /* Section: project info */
+    .project-info {
+      background: var(--cream);
+      border-top: 1px solid var(--border);
+      padding: 3rem;
+      text-align: center;
+    }
+    .project-info h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .project-info p { color: var(--muted); font-size: 0.9rem; line-height: 1.8; }
+    .tags { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+    .tag {
+      background: var(--pink-light);
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: var(--charcoal);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header>
+    <a href="index.html" class="logo">
+      <span>GLOW ✳</span>
+      <span>SOCIETY</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="search.html">Shop</a></li>
+        <li><a href="team.html" class="active">Our Team</a></li>
+        <li><a href="login.html">Admin</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <span class="icon-user">&#9752;</span>
+      <div class="header-search">
+        <input type="text" placeholder="Search..." />
+        <button>&#128269;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="team-hero">
+    <h1 class="fade-up">Meet Our Team</h1>
+    <p class="fade-up-2">We are a group of passionate developers and designers behind Glow Society — your trusted beauty destination.</p>
+  </section>
+
+  <!-- ===================== TEAM GRID ===================== -->
+  <main>
+    <div class="team-grid">
+
+      <!--
+        ====================================================
+        REPLACE EACH CARD with your real team member info!
+        • Change member-name, member-id, member-role, member-bio
+        • Add real photo in member-avatar (or keep emoji)
+        • Add real social media URLs in social-links
+        ====================================================
+      -->
+
+      <!-- Member 1 -->
+      <article class="member-card fade-up">
+        <div class="member-avatar" style="background:linear-gradient(160deg,#f5c5c0,#e8a099)">
+          <div class="fallback">👩‍💻</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Full Name 1</div>
+          <div class="member-id">Student ID: 6XXXXXXX</div>
+          <div class="member-role">Project Leader · Front-end</div>
+          <p class="member-bio">Responsible for project planning, UI design, and front-end implementation of the home and search pages.</p>
+          <div class="social-links">
+            <a href="https://github.com" target="_blank" class="social-link">🐙 GitHub</a>
+            <a href="https://instagram.com" target="_blank" class="social-link">📷 Instagram</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Member 2 -->
+      <article class="member-card fade-up-2">
+        <div class="member-avatar" style="background:linear-gradient(160deg,#d4edd4,#a8d8a8)">
+          <div class="fallback">👨‍💻</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Full Name 2</div>
+          <div class="member-id">Student ID: 6XXXXXXX</div>
+          <div class="member-role">Back-end · Node.js</div>
+          <p class="member-bio">Built the web services, API endpoints, and connected the application to MySQL database.</p>
+          <div class="social-links">
+            <a href="https://github.com" target="_blank" class="social-link">🐙 GitHub</a>
+            <a href="https://linkedin.com" target="_blank" class="social-link">💼 LinkedIn</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Member 3 -->
+      <article class="member-card fade-up-3">
+        <div class="member-avatar" style="background:linear-gradient(160deg,#c8e0f0,#a0c4e8)">
+          <div class="fallback">👩‍🎨</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Full Name 3</div>
+          <div class="member-id">Student ID: 6XXXXXXX</div>
+          <div class="member-role">UI/UX · Front-end</div>
+          <p class="member-bio">Designed the visual identity and implemented the detail, login, and team pages with a focus on user experience.</p>
+          <div class="social-links">
+            <a href="https://github.com" target="_blank" class="social-link">🐙 GitHub</a>
+            <a href="https://behance.net" target="_blank" class="social-link">🎨 Behance</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Member 4 -->
+      <article class="member-card fade-up">
+        <div class="member-avatar" style="background:linear-gradient(160deg,#f5e0c0,#e8c890)">
+          <div class="fallback">👨‍🗄️</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Full Name 4</div>
+          <div class="member-id">Student ID: 6XXXXXXX</div>
+          <div class="member-role">Database · Testing</div>
+          <p class="member-bio">Designed the MySQL database schema, seeded test data, and wrote Postman test cases for all web services.</p>
+          <div class="social-links">
+            <a href="https://github.com" target="_blank" class="social-link">🐙 GitHub</a>
+            <a href="https://twitter.com" target="_blank" class="social-link">🐦 X / Twitter</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Member 5 (optional — remove if group of 4) -->
+      <article class="member-card fade-up-2">
+        <div class="member-avatar" style="background:linear-gradient(160deg,#e8d0f0,#d0b0e8)">
+          <div class="fallback">👩‍🔬</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Full Name 5</div>
+          <div class="member-id">Student ID: 6XXXXXXX</div>
+          <div class="member-role">Integration · Report</div>
+          <p class="member-bio">Handled web service integration on the front-end, external API, and compiled the final project report.</p>
+          <div class="social-links">
+            <a href="https://github.com" target="_blank" class="social-link">🐙 GitHub</a>
+            <a href="https://facebook.com" target="_blank" class="social-link">📘 Facebook</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Project info strip -->
+    <section class="project-info">
+      <h2>ITCS223 — Introduction to Web Development</h2>
+      <p>Faculty of Information and Communication Technology<br/>
+         Project Phase II · Assigned March 16, 2026 · Due April 28, 2026</p>
+      <div class="tags">
+        <span class="tag">HTML5</span>
+        <span class="tag">CSS3</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">REST API</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="footer-col">
+      <h4>About us</h4>
+      <div class="footer-links">
+        <div><a href="#">About BT store</a><a href="#">Career</a><a href="#">Our team</a></div>
+        <div><a href="#">Privacy policy</a><a href="#">Term of use</a></div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Customer care</h4>
+      <div class="footer-links">
+        <div><a href="#">Delivery</a><a href="#">FAQ</a></div>
+        <div><a href="#">Contact us</a><a href="#">Find store</a></div>
+      </div>
+    </div>
+    <div class="footer-logo">GLOW ✳<br/>SOCIETY</div>
+  </footer>
+
+</body>
+</html>

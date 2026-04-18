@@ -1,55 +1,358 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glow Society - Home</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glow Society</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+
+    /* ================================================
+       HERO — full-width pink image area + about text
+       ================================================ */
+    .hero {
+      background: var(--pink);
+    }
+
+    /* Top: hero image placeholder */
+    .hero-image {
+      width: 100%;
+      height: 420px;
+      background: linear-gradient(135deg, #e8a5a0 0%, #d4908a 40%, #c97e78 70%, #e0b0aa 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-image-placeholder {
+      text-align: center;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+    }
+    .hero-image-placeholder .big-icon {
+      font-size: 5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Bottom: about text on pink bg */
+    .hero-about {
+      background: var(--pink);
+      padding: 2rem 3rem 2.5rem;
+    }
+    .hero-about p {
+      color: #fff;
+      font-size: 0.88rem;
+      line-height: 1.9;
+      max-width: 680px;
+      margin-bottom: 1rem;
+      font-weight: 300;
+    }
+    .hero-about p:last-child { margin-bottom: 0; }
+
+    /* ================================================
+       CHECK THIS OUT section
+       ================================================ */
+    .check-section {
+      padding: 2.5rem 3rem 3rem;
+      background: #fff;
+    }
+    .check-title {
+      text-align: center;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-bottom: 2.5rem;
+      font-weight: 500;
+    }
+
+    /* Sub-section row */
+    .sub-section { margin-bottom: 2.8rem; }
+    .sub-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+    }
+    .sub-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: var(--charcoal);
+    }
+    .shop-now {
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--muted);
+      padding-bottom: 1px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .shop-now:hover { color: var(--pink); border-color: var(--pink); }
+
+    /* 3-column product grid */
+    .home-product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    /* Product card */
+    .home-product-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      background: #fff;
+    }
+    .home-product-card:hover {
+      box-shadow: 0 6px 20px rgba(180,120,110,0.14);
+      transform: translateY(-3px);
+    }
+
+    /* Image area */
+    .home-product-img {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .home-product-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+
+    /* Wishlist icon bottom-right */
+    .wishlist-btn {
+      position: absolute;
+      bottom: 8px; right: 8px;
+      width: 26px; height: 26px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #fff;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+      line-height: 1;
+    }
+    .wishlist-btn:hover { background: var(--pink); }
+
+    /* Card text */
+    .home-product-body {
+      padding: 0.7rem 0.85rem 0.85rem;
+    }
+    .home-product-brand {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--charcoal);
+      letter-spacing: 0.03em;
+      margin-bottom: 0.12rem;
+    }
+    .home-product-name {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+    .home-product-price {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--charcoal);
+      margin-bottom: 0.3rem;
+    }
+    .home-product-stars {
+      font-size: 0.72rem;
+      color: var(--pink);
+      letter-spacing: 1px;
+    }
+  </style>
 </head>
 <body>
-    <div id="header-container"></div>
 
-    <main>
-        <article class="main-content">
-            <aside class="category-bar" id="sidebar-container">
-            <p style="font-size: 16px; color: #888; padding: 20px;">Loading categories...</p>
-        </aside>
+  <!-- ===================== HEADER ===================== -->
+  <header>
+    <a href="index.html" class="logo">
+      <span>GLOW ✳</span>
+      <span>SOCIETY</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="search.html">Shop</a></li>
+        <li><a href="team.html">Our Team</a></li>
+        <li><a href="login.html">Admin</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <span class="icon-user">&#9752;</span>
+      <div class="header-search">
+        <input type="text" placeholder="Search..." id="quickSearch" />
+        <button onclick="doQuickSearch()">&#128269;</button>
+      </div>
+    </div>
+  </header>
 
-            <div class="content-area">
-                <section class="banner">
-                    <img src="assets/img/mainPageCover.png" alt="Products Banner">
-                </section>
-                <section class="content-section">
-                    <p>Glow Society is a multibrand beauty store in Thailand. The company started as a wholesale supplier of beauty products but later expanded into retail, offering a wide range of international and in-house brands, including makeup, skincare, perfumes, and more. Over the years, Glow Society has grown steadily.
-Glow Society operates within the beauty and personal care retail domain, offering cosmetics, skincare, fragrances, and lifestyle products. The business covers both physical stores and online platforms, giving customers convenient access to local and international brands at reasonable prices. In addition to selling products, Glow Society also works with influencers, launches seasonal promotions, and provides loyalty programs to build stronger connections with customers.</p>
-                </section>
+  <!-- ===================== MAIN ===================== -->
+  <main>
 
-                <section class="highlight-products">
-                    <h2 class="section-title">CHECK THIS OUT</h2>
-                    <div class="product-row">
-                        <div class="row-header">
-                            <h3>New arrivals</h3>
-                            <a href="#" class="btn-shop-now">shop now</a>
-                        </div>
-                        <div class="row-products" id="new-arrivals-container">
-                            <p style="font-size: 18px; color: #888;">Loading Product...</p>
-                        </div>
-                    </div>
-                    <div class="product-row">
-                        <div class="row-header">
-                            <h3>High rated</h3>
-                            <a href="#" class="btn-shop-now">shop now</a>
-                        </div>
-                        <div class="row-products" id="high-rated-container">
-                            <p style="font-size: 18px; color: #888;">Loading Product...</p>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </article>
-    </main>
+    <!-- ---- HERO ---- -->
+    <section class="hero">
 
-    <footer id="footer-container"></footer>
-    <script src="script.js"></script>
+      <!-- Hero image — replace placeholder with real img when ready -->
+      <div class="hero-image">
+        <!--
+          TODO: When you have the hero photo, replace the div below with:
+          <img src="images/hero.jpg" alt="Glow Society beauty products" />
+        -->
+        <div class="hero-image-placeholder">
+          <span class="big-icon">🌸</span>
+          Hero image placeholder<br/>
+          <small>Replace with flatlay beauty product photo</small>
+        </div>
+      </div>
+
+      <!-- About text (from Figma) -->
+      <div class="hero-about">
+        <p>Glow Society is a multibrand beauty store in Thailand. The company started as a wholesale supplier of beauty products but later expanded into retail, offering a wide range of international and in-house brands, including makeup, skincare, perfumes, and more. Over the years, Glow Society has grown steadily.</p>
+        <p>Glow Society operates within the beauty and personal care retail domain, offering cosmetics, skincare, fragrances, and lifestyle products. The business covers both physical stores and online platforms, giving customers convenient access to local and international brands at reasonable prices. In addition to selling products, Glow Society also works with influencers, launches seasonal promotions, and provides loyalty programs to build stronger connections with customers.</p>
+      </div>
+    </section>
+
+    <!-- ---- CHECK THIS OUT ---- -->
+    <section class="check-section">
+      <p class="check-title">CHECK THIS OUT</p>
+
+      <!-- New arrivals -->
+      <div class="sub-section">
+        <div class="sub-header">
+          <h3>New arrivals</h3>
+          <a href="search.html?sort=new" class="shop-now">shop now</a>
+        </div>
+        <div class="home-product-grid" id="newArrivalsGrid"></div>
+      </div>
+
+      <!-- High rated -->
+      <div class="sub-section">
+        <div class="sub-header">
+          <h3>High rated</h3>
+          <a href="search.html?sort=rating" class="shop-now">shop now</a>
+        </div>
+        <div class="home-product-grid" id="highRatedGrid"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="footer-col">
+      <h4>About us</h4>
+      <div class="footer-links">
+        <div>
+          <a href="#">About BT store</a>
+          <a href="#">Career</a>
+          <a href="#">Our team</a>
+        </div>
+        <div>
+          <a href="#">Privacy policy</a>
+          <a href="#">Term of use</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Customer care</h4>
+      <div class="footer-links">
+        <div><a href="#">Delivery</a><a href="#">FAQ</a></div>
+        <div><a href="#">Contact us</a><a href="#">Find store</a></div>
+      </div>
+    </div>
+    <div class="footer-logo">GLOW ✳<br/>SOCIETY</div>
+  </footer>
+
+  <script>
+    /* ============================================================
+       SAMPLE PRODUCT DATA
+       These will be replaced by real web service calls in Task 4
+       ============================================================ */
+    const NEW_ARRIVALS = [
+      { id:1, brand:'CALVIN KLEIN', name:'CK One Eau de Toilette',      price:1500, rating:4, emoji:'🧴', bg:'#ede8e0' },
+      { id:2, brand:'CALVIN KLEIN', name:'Eternity Aqua for Men',        price:1500, rating:4, emoji:'💙', bg:'#d8e8f0' },
+      { id:3, brand:'CALVIN KLEIN', name:'Euphoria Blossom EDP',         price:1500, rating:4, emoji:'🌸', bg:'#f0d8e4' },
+    ];
+
+    const HIGH_RATED = [
+      { id:4, brand:'BWW',   name:'Lift Gel Liner',              price:190,  rating:5, emoji:'✏️', bg:'#ece4d8' },
+      { id:5, brand:'BWW',   name:'Soft Brow Pencil',            price:190,  rating:5, emoji:'🖊️',bg:'#ece4d8' },
+      { id:6, brand:'DICASI',name:'Max Liquid Pearl Balm',       price:55,   rating:4, emoji:'💋', bg:'#f4d4d8' },
+    ];
+
+    /* ---- Build one card HTML ---- */
+    function makeCard(p) {
+      const full  = Math.round(p.rating);
+      const stars = '★'.repeat(full) + '☆'.repeat(5 - full);
+      return `
+        <div class="home-product-card" onclick="window.location.href='detail.html?id=${p.id}'">
+          <div class="home-product-img" style="background:${p.bg}">
+            <span>${p.emoji}</span>
+            <button class="wishlist-btn" onclick="event.stopPropagation()" title="Add to wishlist">♡</button>
+          </div>
+          <div class="home-product-body">
+            <div class="home-product-brand">${p.brand}</div>
+            <div class="home-product-name">${p.name}</div>
+            <div class="home-product-price">$ ${p.price.toLocaleString()}.00</div>
+            <div class="home-product-stars">${stars}</div>
+          </div>
+        </div>`;
+    }
+
+    /* ---- Load from web service, fallback to sample data ---- */
+    async function loadProducts() {
+      try {
+        /* Task 4: connect to web service */
+        const res = await fetch('http://localhost:3000/api/products/home');
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        document.getElementById('newArrivalsGrid').innerHTML = data.newArrivals.map(makeCard).join('');
+        document.getElementById('highRatedGrid').innerHTML   = data.highRated.map(makeCard).join('');
+      } catch {
+        /* Fallback: use sample data above */
+        document.getElementById('newArrivalsGrid').innerHTML = NEW_ARRIVALS.map(makeCard).join('');
+        document.getElementById('highRatedGrid').innerHTML   = HIGH_RATED.map(makeCard).join('');
+      }
+    }
+
+    /* ---- Quick search ---- */
+    function doQuickSearch() {
+      const q = document.getElementById('quickSearch').value.trim();
+      if (q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+    }
+    document.getElementById('quickSearch').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doQuickSearch();
+    });
+
+    /* Init */
+    loadProducts();
+  </script>
+
 </body>
 </html>

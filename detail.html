@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glow Society — Product Detail</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Breadcrumb */
+    .breadcrumb {
+      padding: 0.75rem 2rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+    .breadcrumb a { color: var(--muted); }
+    .breadcrumb a:hover { color: var(--pink); }
+    .breadcrumb span { margin: 0 0.3rem; }
+
+    /* ---- Detail layout ---- */
+    .detail-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      padding: 2rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    /* ---- Image gallery ---- */
+    .gallery { display: flex; gap: 0.75rem; }
+    .thumb-col { display: flex; flex-direction: column; gap: 0.5rem; }
+    .thumb {
+      width: 70px; height: 70px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      background: var(--cream);
+      transition: border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .thumb img { width:100%; height:100%; object-fit:cover; }
+    .thumb.active, .thumb:hover { border-color: var(--pink); }
+
+    .main-img {
+      flex: 1;
+      aspect-ratio: 1;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6rem;
+      background: var(--cream);
+    }
+    .main-img img { width:100%; height:100%; object-fit:cover; }
+
+    /* ---- Product info ---- */
+    .product-info { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .info-name {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: var(--charcoal);
+      line-height: 1.4;
+    }
+    .info-stars { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; }
+    .info-stars .stars { color: var(--pink); }
+    .info-stars .review-link { color: var(--muted); font-size: 0.76rem; text-decoration: underline; cursor: pointer; }
+    .info-price {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--charcoal);
+    }
+
+    /* Variant rows — label : value */
+    .variant-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+    .variant-row .v-label { color: var(--muted); min-width: 60px; }
+    .variant-opts { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .v-btn {
+      padding: 0.28rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: #fff;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .v-btn:hover, .v-btn.active { border-color: var(--charcoal); background: var(--cream); }
+    .color-dot {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .color-dot.active, .color-dot:hover { border-color: var(--charcoal); }
+
+    /* Quantity */
+    .qty-row { display: flex; align-items: center; gap: 1rem; font-size: 0.85rem; }
+    .qty-row .v-label { color: var(--muted); min-width: 60px; }
+    .qty-ctrl { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+    .qty-ctrl button {
+      width: 30px; height: 30px;
+      background: #fff; border: none;
+      font-size: 1rem; cursor: pointer;
+      color: var(--charcoal);
+      transition: background 0.15s;
+    }
+    .qty-ctrl button:hover { background: var(--cream); }
+    .qty-ctrl input {
+      width: 36px; height: 30px;
+      border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+      outline: none;
+    }
+
+    /* Action buttons */
+    .action-btns { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+    .btn-addcart {
+      flex: 1;
+      padding: 0.65rem;
+      border: 1.5px solid var(--charcoal);
+      background: #fff;
+      color: var(--charcoal);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-addcart:hover { background: var(--charcoal); color: #fff; }
+    .btn-buynow {
+      flex: 1;
+      padding: 0.65rem;
+      border: none;
+      background: var(--pink);
+      color: #fff;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .btn-buynow:hover { background: #d4908a; }
+
+    /* ---- Tabs ---- */
+    .tabs-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 3rem 2rem;
+      background: #fff;
+    }
+    .tab-nav { display: flex; border-bottom: 1px solid var(--border); }
+    .tab-btn {
+      padding: 0.6rem 1.5rem;
+      background: none; border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .tab-btn.active { color: var(--charcoal); border-bottom-color: var(--charcoal); }
+    .tab-panel { display: none; padding: 1.2rem 0; font-size: 0.85rem; line-height: 1.8; color: var(--charcoal); }
+    .tab-panel.active { display: block; }
+    .tab-panel p { margin-bottom: 0.6rem; }
+    .tab-panel ul { padding-left: 1.2rem; }
+    .tab-panel ul li { margin-bottom: 0.3rem; }
+
+    /* Payment & Delivery tab */
+    .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .payment-col h4 { font-size: 0.82rem; font-weight: 500; margin-bottom: 0.5rem; }
+
+    /* ---- Recommended section ---- */
+    .recommended {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 3rem 2.5rem;
+      background: #fff;
+      border-top: 1px solid var(--border);
+    }
+    .recommended h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+    .rec-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+    }
+    .rec-card {
+      cursor: pointer;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .rec-card:hover { box-shadow: 0 4px 12px rgba(180,120,110,0.12); }
+    .rec-img {
+      aspect-ratio: 1;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+    }
+    .rec-body { padding: 0.5rem 0.6rem 0.6rem; }
+    .rec-brand { font-size: 0.68rem; font-weight: 500; color: var(--charcoal); }
+    .rec-name  { font-size: 0.68rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .rec-price { font-size: 0.72rem; color: var(--charcoal); }
+    .rec-stars { font-size: 0.62rem; color: var(--pink); }
+
+    /* Save button (admin) */
+    .save-row { text-align: right; padding: 1rem 3rem; background: #fff; border-top: 1px solid var(--border); display: none; }
+    .save-row.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== HEADER ===================== -->
+  <header>
+    <a href="index.html" class="logo">
+      <span>GLOW ✳</span>
+      <span>SOCIETY</span>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="search.html" class="active">Shop</a></li>
+        <li><a href="team.html">Our Team</a></li>
+        <li><a href="login.html">Admin</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <span class="icon-user">&#9752;</span>
+      <div class="header-search">
+        <input type="text" placeholder="Search..." />
+        <button>&#128269;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <a href="search.html" id="backLink">Shop</a>
+    <span>›</span>
+    <span id="bcName">Loading…</span>
+  </nav>
+
+  <!-- ===================== DETAIL ===================== -->
+  <main>
+
+    <div class="detail-wrap" id="detailWrap">
+
+      <!-- Gallery -->
+      <section class="gallery">
+        <div class="thumb-col" id="thumbCol">
+          <div class="thumb active" data-emoji="🖤">🖤</div>
+          <div class="thumb" data-emoji="💄">💄</div>
+          <div class="thumb" data-emoji="✨">✨</div>
+        </div>
+        <div class="main-img" id="mainImg">🖤</div>
+      </section>
+
+      <!-- Info -->
+      <article class="product-info">
+        <div class="info-name" id="pName">Loading…</div>
+
+        <div class="info-stars">
+          <span class="stars" id="pStars">★★★★☆</span>
+          <span id="pRating">4.0</span>
+          <span class="review-link">Write a review</span>
+        </div>
+
+        <div class="info-price" id="pPrice">$—</div>
+
+        <!-- Volume -->
+        <div class="variant-row">
+          <span class="v-label">volume:</span>
+          <div class="variant-opts" id="volumeOpts"></div>
+        </div>
+
+        <!-- Color -->
+        <div class="variant-row" id="colorRow">
+          <span class="v-label">Color:</span>
+          <div class="variant-opts" id="colorOpts"></div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="qty-row">
+          <span class="v-label">Quantity:</span>
+          <div class="qty-ctrl">
+            <button onclick="changeQty(-1)">−</button>
+            <input type="number" id="qtyInput" value="1" min="1" max="99" />
+            <button onclick="changeQty(1)">+</button>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="action-btns">
+          <button class="btn-addcart">Add to cart</button>
+          <button class="btn-buynow">Buy now</button>
+        </div>
+      </article>
+
+    </div><!-- /detail-wrap -->
+
+    <!-- ---- Tabs ---- -->
+    <div class="tabs-wrap">
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="openTab('details',this)">Product details</button>
+        <button class="tab-btn" onclick="openTab('howto',this)">How to</button>
+        <button class="tab-btn" onclick="openTab('ingredients',this)">Ingredients</button>
+        <button class="tab-btn" onclick="openTab('payment',this)">Payment &amp; Delivery</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-details">
+        <p id="tabDetailsText">—</p>
+      </div>
+      <div class="tab-panel" id="tab-howto">
+        <p id="tabHowtoText">—</p>
+      </div>
+      <div class="tab-panel" id="tab-ingredients">
+        <p id="tabIngrText">—</p>
+      </div>
+      <div class="tab-panel" id="tab-payment">
+        <div class="payment-grid">
+          <div class="payment-col">
+            <h4>Payment</h4>
+            <ul>
+              <li>You can place an order and choose to pay using either:</li>
+              <li>Credit card or Debit card (Visa, Mastercard, JCB or Union Pay are all accepted. Unfortunately we do not accept American Express at this time.)</li>
+              <li>Pay now</li>
+              <li>QR code payment</li>
+              <li>Line pay</li>
+              <li>Cash on delivery</li>
+              <li>Member points: If you are a member you can use your points to pay for any goods on our website, except for delivery charges.</li>
+              <li>E-voucher: During special promotions you may earn or be a voucher, which you can use to pay for any goods on our website, except for delivery charges.</li>
+            </ul>
+          </div>
+          <div class="payment-col">
+            <h4>Delivery</h4>
+            <ul>
+              <li>You can place an order and choose to pay using either:</li>
+              <li>Credit card or Debit card (Visa, Mastercard, JCB or Union Pay are all accepted. Unfortunately we do not accept American Express at this time.)</li>
+              <li>Pay now</li>
+              <li>QR code payment</li>
+              <li>Line pay</li>
+              <li>Cash on delivery</li>
+              <li>Member points: If you are a member, you can use your points to pay for any goods on our website, except for delivery charges.</li>
+              <li>E-voucher: During special promotions you may earn or be a voucher, which you can use to pay for any goods on our website, except for delivery charges.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save button (admin only) -->
+    <div class="save-row" id="saveRow">
+      <button class="btn btn-primary" onclick="saveProduct()">Save</button>
+    </div>
+
+    <!-- ---- Recommended ---- -->
+    <section class="recommended">
+      <h3>Recommended for you</h3>
+      <div class="rec-grid" id="recGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="footer-col">
+      <h4>About us</h4>
+      <div class="footer-links">
+        <div><a href="#">About BT store</a><a href="#">Career</a><a href="#">Our team</a></div>
+        <div><a href="#">Privacy policy</a><a href="#">Term of use</a></div>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Customer care</h4>
+      <div class="footer-links">
+        <div><a href="#">Delivery</a><a href="#">FAQ</a></div>
+        <div><a href="#">Contact us</a><a href="#">Find store</a></div>
+      </div>
+    </div>
+    <div class="footer-logo">GLOW ✳<br/>SOCIETY</div>
+  </footer>
+
+  <script>
+    /* ============================================================
+       SAMPLE PRODUCT DATA — matches Figma (Maybelline etc.)
+       In Task 4 fetched from web service /api/products/:id
+       ============================================================ */
+    const PRODUCTS_DB = {
+      1: {
+        id:1, brand:'MAYBELLINE NEW YORK',
+        name:'Volume Express Hyper Curl Waterproof',
+        price:179, rating:4.0,
+        emoji:'🖤', bg:'#f0ece8',
+        volumes:['9.2 ml'],
+        colors:['#000000','#1a1a2e'],
+        details:'Hyperfast, hypercurling curl from day to night. Toss your curler and lock in 73% more curl, 3x volume with an 18-hour hyperprint, instantly. Our exclusive curl-lock formula contains and seals in moisture for root-to-tip without any clumping. Maybelline New York is the number one cosmetic brand in the world, available in over 130 countries. By combining technologically advanced formulations with on-trend expertise and New York City edge, Maybelline New York\'s mission is to offer innovative, accessible and effortless cosmetics for every woman.',
+        howto:'1. Curl lashes with an eyelash curler.\n2. Starting at the base, wiggle wand in a zigzag motion to the tips.\n3. Apply a second coat while still wet for more volume.',
+        ingredients:'Water, Beeswax, Carnauba Wax, Cetearyl Alcohol, Stearic Acid, Acacia Senegal Gum.',
+        category:'makeup'
+      },
+      2: {
+        id:2, brand:'MAYBELLINE NEW YORK',
+        name:'Fit Me Matte + Poreless Foundation',
+        price:249, rating:4.0,
+        emoji:'💄', bg:'#f4e8e0',
+        volumes:['30 ml'],
+        colors:['#f5e0cc','#e8c9a8','#d4a882'],
+        details:'Natural matte finish that controls shine and minimizes pores. Dermatologist tested. For normal to oily skin.',
+        howto:'Apply with fingers, brush, or sponge starting from the center of the face and blending outward.',
+        ingredients:'Water, Cyclopentasiloxane, Titanium Dioxide, Talc, Niacinamide.',
+        category:'makeup'
+      },
+    };
+
+    const RECOMMENDED = [
+      { id:1, brand:'MAYBELLINE NEW YORK', name:'Hyper Curl Mascara',    price:179, rating:4, emoji:'🖤', bg:'#f0ece8' },
+      { id:2, brand:'MAYBELLINE NEW YORK', name:'Fit Me Foundation',     price:249, rating:4, emoji:'💄', bg:'#f4e8e0' },
+      { id:3, brand:'MAYBELLINE NEW YORK', name:'SuperStay Lip',         price:249, rating:4, emoji:'💋', bg:'#f4dcd8' },
+      { id:4, brand:'MAYBELLINE NEW YORK', name:'Sky High Mascara',      price:169, rating:4, emoji:'✨', bg:'#e8e4f0' },
+    ];
+
+    /* ============================================================
+       LOAD PRODUCT
+       ============================================================ */
+    async function loadProduct() {
+      const id = new URLSearchParams(window.location.search).get('id') || '1';
+
+      try {
+        /* Task 4: fetch from web service */
+        const res  = await fetch(`http://localhost:3000/api/products/${id}`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        renderProduct(data.product);
+      } catch {
+        const p = PRODUCTS_DB[parseInt(id)] || PRODUCTS_DB[1];
+        renderProduct(p);
+      }
+    }
+
+    function renderProduct(p) {
+      document.title = `${p.name} — Glow Society`;
+      document.getElementById('bcName').textContent  = p.name;
+      document.getElementById('pName').textContent   = `${p.brand} ${p.name}`;
+      document.getElementById('pPrice').textContent  = `$ ${p.price.toFixed(2)}`;
+      document.getElementById('pRating').textContent = p.rating.toFixed(1);
+
+      /* Stars */
+      const full = Math.round(p.rating);
+      document.getElementById('pStars').textContent = '★'.repeat(full) + '☆'.repeat(5-full);
+
+      /* Main image */
+      document.getElementById('mainImg').textContent = p.emoji;
+      document.getElementById('mainImg').style.background = p.bg;
+
+      /* Thumbnails */
+      const thumbCol = document.getElementById('thumbCol');
+      thumbCol.innerHTML = [p.emoji, '🖼', '🖼'].map((e,i) => `
+        <div class="thumb ${i===0?'active':''}" data-emoji="${e}" onclick="selectThumb(this)">
+          ${e}
+        </div>`).join('');
+
+      /* Volume */
+      document.getElementById('volumeOpts').innerHTML = (p.volumes||[]).map((v,i) =>
+        `<button class="v-btn ${i===0?'active':''}" onclick="selectVariant(this)">${v}</button>`
+      ).join('');
+
+      /* Color */
+      if (p.colors && p.colors.length) {
+        document.getElementById('colorOpts').innerHTML = p.colors.map((c,i) =>
+          `<div class="color-dot ${i===0?'active':''}" style="background:${c}" onclick="selectColor(this)" title="${c}"></div>`
+        ).join('');
+      } else {
+        document.getElementById('colorRow').style.display = 'none';
+      }
+
+      /* Tabs */
+      document.getElementById('tabDetailsText').textContent  = p.details     || '—';
+      document.getElementById('tabHowtoText').textContent    = p.howto       || '—';
+      document.getElementById('tabIngrText').textContent     = p.ingredients || '—';
+
+      /* Admin: show Save button */
+      if (sessionStorage.getItem('adminToken')) {
+        document.getElementById('saveRow').classList.add('show');
+      }
+
+      /* Recommended */
+      renderRecommended(p.category);
+    }
+
+    function renderRecommended(cat) {
+      document.getElementById('recGrid').innerHTML = RECOMMENDED.map(p => {
+        const stars = '★'.repeat(p.rating) + '☆'.repeat(5-p.rating);
+        return `
+          <div class="rec-card" onclick="window.location.href='detail.html?id=${p.id}'">
+            <div class="rec-img" style="background:${p.bg}">${p.emoji}</div>
+            <div class="rec-body">
+              <div class="rec-brand">${p.brand}</div>
+              <div class="rec-name">${p.name}</div>
+              <div class="rec-price">$ ${p.price.toFixed(2)}</div>
+              <div class="rec-stars">${stars}</div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    /* ---- Tab switching ---- */
+    function openTab(id, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-'+id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    /* ---- Thumbnail select ---- */
+    function selectThumb(el) {
+      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('mainImg').textContent = el.dataset.emoji;
+    }
+
+    /* ---- Variant select ---- */
+    function selectVariant(el) {
+      el.closest('.variant-opts').querySelectorAll('.v-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    }
+    function selectColor(el) {
+      el.closest('.variant-opts').querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    /* ---- Quantity ---- */
+    function changeQty(delta) {
+      const inp = document.getElementById('qtyInput');
+      const val = Math.max(1, Math.min(99, parseInt(inp.value || 1) + delta));
+      inp.value = val;
+    }
+
+    /* ---- Save (admin) ---- */
+    function saveProduct() {
+      alert('Product saved! (Connect to web service in Task 4)');
+    }
+
+    /* ---- Back link preserves search ---- */
+    const fromSearch = new URLSearchParams(window.location.search).get('from');
+    if (fromSearch === 'search') {
+      document.getElementById('backLink').textContent = '← Search results';
+    }
+
+    /* Init */
+    loadProduct();
+  </script>
+
+</body>
+</html>
